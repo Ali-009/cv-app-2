@@ -1,9 +1,8 @@
 
 import React from 'react';
-import InputSection from './components/InputSection'
-import FormControl from './components/FormControl';
+import PersonalInfoInput from './components/PersonalInfoInput';
+import EducationInput from './components/EducationInput';
 import './styles/app-style.css'
-
 
 class App extends React.Component{
   constructor(props){
@@ -13,6 +12,10 @@ class App extends React.Component{
       lastName: '',
       email: '',
       phoneNumber: '',
+      school: '',
+      studyTitle: '',
+      eduStart: '',
+      eduEnd: '',
     }
     this.updateForm = this.updateForm.bind(this)
   }
@@ -25,20 +28,15 @@ class App extends React.Component{
 
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
+    const {school, studyTitle, eduStart, eduEnd} = this.state
     return (
     <div className="app-container">
         <h1>CV Application</h1>  
         <form action="#">
-          <InputSection title='Personal Information'>
-            <FormControl name='firstName' label='First Name'
-            value={firstName} updateForm={this.updateForm}/>
-            <FormControl name='lastName' label='Last Name'
-            value={lastName} updateForm={this.updateForm}/>
-            <FormControl name='email' label='Email' type='email'
-            value={email} updateForm={this.updateForm} />
-            <FormControl name='phoneNumber' label='Phone Number' type='tel'
-            value={phoneNumber} updateForm={this.updateForm} />
-          </InputSection>
+          <PersonalInfoInput firstName={firstName} lastName={lastName}
+          email={email} phoneNumber={phoneNumber} updateForm={this.updateForm}/>
+          <EducationInput school={school} studyTitle={studyTitle} 
+          eduStart={eduStart} eduEnd={eduEnd} updateForm={this.updateForm} />
         </form>
     </div>
     )
