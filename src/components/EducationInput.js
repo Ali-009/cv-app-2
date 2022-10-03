@@ -10,13 +10,13 @@ class EducationInput extends React.Component{
 
     handleClick(event){
         event.preventDefault()
-        this.props.addEduHistory()
+        this.props.updateEduHistory()
     }
 
     render(){
-        const {school, studyTitle, eduStart, eduEnd, updateForm, buttonPurpose} = this.props
+        const {header, school, studyTitle, eduStart, eduEnd, updateForm, buttonPurpose} = this.props
         return (
-            <InputSection title='Education'>
+            <InputSection title={header}>
                 <FormControl name='school' label='School'
                 value={school} updateForm={updateForm}/>
                 <FormControl name='studyTitle' label='Title of Study'

@@ -30,3 +30,31 @@ body{
 form{
     width: 720px;
 }
+
+.history-container{
+    margin: 48px;
+    font-family: 'Montserrat';
+    color: hsl(210deg, 12%, 45%);
+}
+
+ul{
+    list-style: none;
+}
+
+.history-container h3{
+    font-weight: 300;
+}
+
+.history-container li{
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.history-container li > button{
+    appearance: none;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-style: italic;
+}

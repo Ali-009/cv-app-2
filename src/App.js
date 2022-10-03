@@ -2,6 +2,10 @@
 import React from 'react';
 import PersonalInfoInput from './components/PersonalInfoInput';
 import EducationInput from './components/EducationInput';
+import HistoryContainer from './components/HistoryContainer';
+import EduHistoryItem from './components/EduHistoryItem';
+
+import uniqid from 'uniqid'
 import './styles/app-style.css'
 
 class App extends React.Component{
@@ -17,9 +21,23 @@ class App extends React.Component{
       eduStart: '',
       eduEnd: '',
       eduHistory: [],
+      eduHistoryEdit: false,
+      schoolEdit: '',
+      studyTitleEdit: '',
+      eduStartEdit: '',
+      eduEndEdit: '',
+      eduEditIndex: 0,
     }
+    //Used to create React Controlled Inputs
     this.updateForm = this.updateForm.bind(this)
+    this.updateEditSection = this.updateEditSection.bind(this)
+    //Used to add an item to a history array
+    this.addHistory = this.addHistory.bind(this)
     this.addEduHistory = this.addEduHistory.bind(this)
+    //Used for editing history arrays
+    this.editHistory = this.editHistory.bind(this)
+    this.editEduHistoryRequest = this.editEduHistoryRequest.bind(this)
+    this.editEduHistory = this.editEduHistory.bind(this)
   }
   
   updateForm(name, value){
@@ -28,10 +46,20 @@ class App extends React.Component{
     })
   }
 
+  //Controlled inputs for edit sections of the form
+  //To the section components, both forms of updating the form are identical and are referenced using this.props.updateForm
+  //The state member variables for editing are named similar to the ones in MainForm and only have 'Edit' at the end of their key
+  //The function below is also reusable for editing experience section
+  updateEditSection(key, value){
+    this.setState({
+        [key + 'Edit']: value,
+    })
+  }
+
   //A generic function that is used for adding both education and work experience history
-  addHistory(data, historyArray){
+  addHistory(historyItem, historyArray){
     const updatedHistory = historyArray.concat({
-      ...data,
+      ...historyItem,
     })
     return updatedHistory
   }
@@ -46,20 +74,104 @@ class App extends React.Component{
     })
   }
 
+  //The request to edit history has to be separate for both education and work experience
+  //due to the small differences between them. An abstraction for both couldn't be written
+  editEduHistoryRequest(elementData, index){
+    this.setState({
+        eduHistoryEdit: true,
+        schoolEdit: elementData.school,
+        studyTitleEdit: elementData.studyTitle,
+        eduStartEdit: elementData.eduStart,
+        eduEndEdit: elementData.eduEnd,
+        eduEditIndex: index,
+    })
+  }
+
+  //A generic function for editing history
+  editHistory(historyArray, sourceObj, targetObj, currentEditIndex){
+    const updatedHistory = historyArray.map((historyElement, index) => {
+      if(currentEditIndex === index){
+        for(const historyItem in targetObj){
+          targetObj[historyItem] = sourceObj[historyItem+'Edit'] 
+        }
+        return targetObj
+      } else {
+        return historyElement
+      }
+    })
+
+    return updatedHistory
+  }
+
+  editEduHistory(){
+    this.setState((state) => {
+      const {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit, eduHistory, eduEditIndex} = state
+      const editSource = {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit}
+      let editTarget = {
+        school: '',
+        studyTitle: '',
+        eduStart: '',
+        eduEnd: '',
+      }
+
+      return{
+        eduHistory: this.editHistory(eduHistory, editSource, editTarget, eduEditIndex)
+      }
+    })
+  }
+
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
-    const {school, studyTitle, eduStart, eduEnd} = this.state
+    const {school, studyTitle, eduStart, eduEnd, eduHistory, eduHistoryEdit} = this.state
+
+    //conditionally render the education history container
+    let eduHistoryContainer = null
+    if(eduHistory.length > 0){
+      eduHistoryContainer 
+      = <HistoryContainer title='Education History'>
+          <ul>
+            {eduHistory.map((eduHistoryElement, index) => {
+              return (
+                <EduHistoryItem key={uniqid()} 
+                eduHistoryElement={eduHistoryElement}
+                eduHistoryElementIndex={index}
+                editEduHistoryRequest={this.editEduHistoryRequest}/>
+              )
+            })}
+          </ul>
+      </HistoryContainer>
+    }
+
+    //conditionally rendering the education edit section
+    let eduHistoryEditSection = null;
+        if(eduHistoryEdit){
+            const {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit} = 
+            this.state
+
+            eduHistoryEditSection =
+            <EducationInput header='Edit Education History' 
+            buttonPurpose={'Edit'}
+            school={schoolEdit} studyTitle={studyTitleEdit} 
+            eduStart={eduStartEdit} eduEnd={eduEndEdit} 
+            updateForm={this.updateEditSection}
+            updateEduHistory={this.editEduHistory}/>
+        }
+
     return (
-    <div className="app-container">
-        <h1>CV Application</h1>  
-        <form action="#">
-          <PersonalInfoInput firstName={firstName} lastName={lastName}
-          email={email} phoneNumber={phoneNumber} updateForm={this.updateForm}/>
-          <EducationInput school={school} studyTitle={studyTitle} 
-          eduStart={eduStart} eduEnd={eduEnd} updateForm={this.updateForm} 
-          buttonPurpose='Add' addEduHistory={this.addEduHistory}/>
-        </form>
-    </div>
+      <div className="app-container">
+          <h1>CV Application</h1>  
+          <form action="#">
+            <PersonalInfoInput firstName={firstName} lastName={lastName}
+            email={email} phoneNumber={phoneNumber} updateForm={this.updateForm}/>
+
+            {eduHistoryContainer}
+            {eduHistoryEditSection}
+
+            <EducationInput header='Education' school={school} studyTitle={studyTitle} 
+            eduStart={eduStart} eduEnd={eduEnd} updateForm={this.updateForm} 
+            buttonPurpose='Add' updateEduHistory={this.addEduHistory}/>
+          </form>
+      </div>
     )
   }
 }
