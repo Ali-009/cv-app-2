@@ -55,3 +55,21 @@ fieldset{
 
     padding-left: 6px;
 }
+
+
+.input-button{
+    margin-top: 22px;
+    background-color: hsl(210deg, 12%, 50%);
+    border-radius: 3px;
+    color: white;
+    height: 28px;
+    width: 100px;
+
+    grid-column: 2 / 3;
+    justify-self: end;
+}
+
+.input-button:hover{
+    background-color: hsl(210deg, 12%, 45%);
+    cursor: pointer;
+}

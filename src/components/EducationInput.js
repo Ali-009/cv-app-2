@@ -5,10 +5,16 @@ import InputSection from './InputSection'
 class EducationInput extends React.Component{
     constructor(props){
         super(props)
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick(event){
+        event.preventDefault()
+        this.props.addEduHistory()
     }
 
     render(){
-        const {school, studyTitle, eduStart, eduEnd, updateForm} = this.props
+        const {school, studyTitle, eduStart, eduEnd, updateForm, buttonPurpose} = this.props
         return (
             <InputSection title='Education'>
                 <FormControl name='school' label='School'
@@ -19,6 +25,8 @@ class EducationInput extends React.Component{
                 value={eduStart} updateForm={updateForm} />
                 <FormControl name='eduEnd' label='To' type='date'
                 value={eduEnd} updateForm={updateForm} />
+                <button className="input-button" 
+                onClick={this.handleClick}>{buttonPurpose}</button>
             </InputSection>
         )
     }
