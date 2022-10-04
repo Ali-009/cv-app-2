@@ -41,6 +41,8 @@ class App extends React.Component{
       positionEdit: '',
       workStartEdit: '',
       workEndEdit: '',
+      mainTasksInputEdit: '',
+      mainTasksArrayEdit: [],
       workEditIndex: 0,
     }
     
@@ -123,13 +125,14 @@ class App extends React.Component{
   }
 
   editWorkHistoryRequest(elementData, index){
-    const {companyName, position, workStart, workEnd} = elementData
+    const {companyName, position, workStart, workEnd, mainTasksArray} = elementData
     this.setState({
       workHistoryEdit: true,
       companyNameEdit: companyName,
       positionEdit: position,
       workStartEdit: workStart,
       workEndEdit: workEnd,
+      mainTasksArrayEdit: mainTasksArray,
       workEditIndex: index,
     })
   }
@@ -139,7 +142,15 @@ class App extends React.Component{
     const updatedHistory = historyArray.map((historyElement, index) => {
       if(currentEditIndex === index){
         for(const historyItem in targetObj){
-          targetObj[historyItem] = sourceObj[historyItem+'Edit'] 
+          if(historyItem === 'mainTasksArray'){
+            //This creates a deep copy of a mainTasksArray
+            for(let i = 0; i < sourceObj[historyItem+'Edit'].length; i++){
+              targetObj[historyItem][i] = sourceObj[historyItem+'Edit'][i]
+            }
+          } else {
+            targetObj[historyItem] = sourceObj[historyItem+'Edit']
+          }
+           
         }
         return targetObj
       } else {
@@ -169,13 +180,15 @@ class App extends React.Component{
 
   editWorkHistory(){
     this.setState((state => {
-      const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, workHistory, workEditIndex} = state
-      const editSource = {companyNameEdit, positionEdit, workStartEdit, workEndEdit}
+      const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit} = state
+      const {workHistory, workEditIndex} = state
+      const editSource = {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit}
       let editTarget = {
         companyName: '',
         position: '',
         workStart: '',
         workEnd: '',
+        mainTasksArray: [],
       }
 
       return{
@@ -195,7 +208,7 @@ class App extends React.Component{
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
     const {school, studyTitle, eduStart, eduEnd, eduHistory, eduHistoryEdit} = this.state
-    const {companyName, position, workStart, workEnd, workHistory} = this.state
+    const {companyName, position, workStart, workEnd, workHistory, workHistoryEdit} = this.state
     const {mainTasksInput, mainTasksArray} = this.state
 
     //conditionally render the education history container
@@ -236,18 +249,30 @@ class App extends React.Component{
 
     //conditionally rendering the education edit section
     let eduHistoryEditSection = null;
-        if(eduHistoryEdit){
-            const {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit} = 
-            this.state
+    if(eduHistoryEdit){
+        const {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit} = 
+        this.state
 
-            eduHistoryEditSection =
-            <EducationInput header='Edit Education History' 
-            buttonPurpose={'Edit'}
-            school={schoolEdit} studyTitle={studyTitleEdit} 
-            eduStart={eduStartEdit} eduEnd={eduEndEdit} 
-            updateForm={this.updateEditSection}
-            updateEduHistory={this.editEduHistory}/>
-        }
+        eduHistoryEditSection =
+        <EducationInput header='Edit Education History' 
+        buttonPurpose='Edit'
+        school={schoolEdit} studyTitle={studyTitleEdit} 
+        eduStart={eduStartEdit} eduEnd={eduEndEdit} 
+        updateForm={this.updateEditSection}
+        updateEduHistory={this.editEduHistory}/>
+    }
+
+    //conditionally rendering the work experience section
+    let workEditSection = null;
+    if(workHistoryEdit){
+      const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit} = this.state
+
+      workEditSection 
+      = <WorkExpInput header='Edit Work Experience'
+      buttonPurpose='Edit' companyName={companyNameEdit} position={positionEdit}
+      workStart={workStartEdit} workEnd={workEndEdit} mainTasksArray={mainTasksArrayEdit} 
+      updateForm={this.updateEditSection}/>
+    }
 
     return (
       <div className="app-container">
@@ -264,6 +289,7 @@ class App extends React.Component{
             buttonPurpose='Add' updateEduHistory={this.addEduHistory}/>
 
             {workHistoryContainer}
+            {workEditSection}
             <WorkExpInput header='Work Experience' companyName={companyName} position={position}
             workStart={workStart} workEnd={workEnd} mainTasksInput={mainTasksInput} updateForm={this.updateForm} 
             buttonPurpose='Add' updateWorkHistory={this.addWorkHistory} updateMainTasks={this.updateMainTasks}

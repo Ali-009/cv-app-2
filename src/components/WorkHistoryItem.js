@@ -9,7 +9,9 @@ class WorkHistoryItem extends React.Component{
     }
 
     handleHistoryEdit(event){
+        const {editWorkHistoryRequest, workHistoryElement, workHistoryElementIndex} = this.props
         event.preventDefault()
+        editWorkHistoryRequest(workHistoryElement, workHistoryElementIndex)
     }
 
     render(){
