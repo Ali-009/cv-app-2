@@ -100,8 +100,8 @@ class App extends React.Component{
 
   addWorkHistory(){
     this.setState((state) => {
-      const {companyName, position, workStart, workEnd, workHistory} = state
-      const workData = {companyName, position, workStart, workEnd}
+      const {companyName, position, workStart, workEnd, mainTasksArray, workHistory} = state
+      const workData = {companyName, position, workStart, mainTasksArray, workEnd}
       return{
         workHistory: this.addHistory(workData, workHistory)
       }

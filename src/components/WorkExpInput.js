@@ -2,7 +2,8 @@ import React from 'react'
 import FormControl from './FormControl'
 import InputSection from './InputSection'
 import HistoryContainer from './HistoryContainer'
-import uniqid from 'uniqid'
+
+import MainTasksDisplay from './MainTasksDisplay'
 
 class WorkExpInput extends React.Component{
     constructor(props){
@@ -27,11 +28,7 @@ class WorkExpInput extends React.Component{
         let mainTasksDisplay = null
         if(mainTasksArray.length > 0){
             mainTasksDisplay 
-            = mainTasksArray.map((mainTask, index) => {
-                return (
-                    <li key={uniqid()}>{mainTask}</li>
-                )
-            })
+            = <MainTasksDisplay mainTasksArray={mainTasksArray}/>
         }
         return (
             <InputSection title={header}>
