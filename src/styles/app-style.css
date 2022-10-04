@@ -43,6 +43,7 @@ ul{
 
 .history-container h3{
     font-weight: 300;
+    border-bottom: solid thin lightgray;
 }
 
 .history-container li{

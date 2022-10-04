@@ -2,8 +2,10 @@
 import React from 'react';
 import PersonalInfoInput from './components/PersonalInfoInput';
 import EducationInput from './components/EducationInput';
+import WorkExpInput from './components/WorkExpInput';
 import HistoryContainer from './components/HistoryContainer';
 import EduHistoryItem from './components/EduHistoryItem';
+import WorkHistoryItem from './components/WorkHistoryItem';
 
 import uniqid from 'uniqid'
 import './styles/app-style.css'
@@ -27,17 +29,34 @@ class App extends React.Component{
       eduStartEdit: '',
       eduEndEdit: '',
       eduEditIndex: 0,
+      companyName: '',
+      position: '',
+      workStart: '',
+      workEnd: '',
+      workHistory: [],
+      workHistoryEdit: false,
+      companyNameEdit: '',
+      positionEdit: '',
+      workStartEdit: '',
+      workEndEdit: '',
+      workEditIndex: 0,
     }
+    
     //Used to create React Controlled Inputs
     this.updateForm = this.updateForm.bind(this)
     this.updateEditSection = this.updateEditSection.bind(this)
+    
     //Used to add an item to a history array
     this.addHistory = this.addHistory.bind(this)
     this.addEduHistory = this.addEduHistory.bind(this)
+    this.addWorkHistory = this.addWorkHistory.bind(this)
+    
     //Used for editing history arrays
     this.editHistory = this.editHistory.bind(this)
     this.editEduHistoryRequest = this.editEduHistoryRequest.bind(this)
+    this.editWorkHistoryRequest = this.editWorkHistoryRequest.bind(this)
     this.editEduHistory = this.editEduHistory.bind(this)
+    this.editWorkHistory = this.editWorkHistory.bind(this)
   }
   
   updateForm(name, value){
@@ -74,16 +93,39 @@ class App extends React.Component{
     })
   }
 
+  addWorkHistory(){
+    this.setState((state) => {
+      const {companyName, position, workStart, workEnd, workHistory} = state
+      const workData = {companyName, position, workStart, workEnd}
+      return{
+        workHistory: this.addHistory(workData, workHistory)
+      }
+    })
+  }
+
   //The request to edit history has to be separate for both education and work experience
-  //due to the small differences between them. An abstraction for both couldn't be written
+  //due to the small differences between them. An abstraction for both is not worth the effort
   editEduHistoryRequest(elementData, index){
+    const {school, studyTitle, eduStart, eduEnd} = elementData
     this.setState({
         eduHistoryEdit: true,
-        schoolEdit: elementData.school,
-        studyTitleEdit: elementData.studyTitle,
-        eduStartEdit: elementData.eduStart,
-        eduEndEdit: elementData.eduEnd,
+        schoolEdit: school,
+        studyTitleEdit: studyTitle,
+        eduStartEdit: eduStart,
+        eduEndEdit: eduEnd,
         eduEditIndex: index,
+    })
+  }
+
+  editWorkHistoryRequest(elementData, index){
+    const {companyName, position, workStart, workEnd} = elementData
+    this.setState({
+      workHistoryEdit: true,
+      companyNameEdit: companyName,
+      positionEdit: position,
+      workStartEdit: workStart,
+      workEndEdit: workEnd,
+      workEditIndex: index,
     })
   }
 
@@ -120,9 +162,27 @@ class App extends React.Component{
     })
   }
 
+  editWorkHistory(){
+    this.setState((state => {
+      const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, workHistory, workEditIndex} = state
+      const editSource = {companyNameEdit, positionEdit, workStartEdit, workEndEdit}
+      let editTarget = {
+        companyName: '',
+        position: '',
+        workStart: '',
+        workEnd: '',
+      }
+
+      return{
+        workHistory: this.editHistory(workHistory, editSource, editTarget, workEditIndex)
+      }
+    }))
+  }
+
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
     const {school, studyTitle, eduStart, eduEnd, eduHistory, eduHistoryEdit} = this.state
+    const {companyName, position, workStart, workEnd, workHistory} = this.state
 
     //conditionally render the education history container
     let eduHistoryContainer = null
@@ -139,6 +199,24 @@ class App extends React.Component{
               )
             })}
           </ul>
+      </HistoryContainer>
+    }
+
+    //conditionally render the work history container
+    let workHistoryContainer = null
+    if(workHistory.length > 0){
+      workHistoryContainer 
+      = <HistoryContainer title='Work History'>
+        <ul>
+          {workHistory.map((workHistoryElement, index) => {
+            return (
+              <WorkHistoryItem key={uniqid()}
+              workHistoryElement={workHistoryElement}
+              workHistoryElementIndex={index}
+              editWorkHistoryRequest={this.editWorkHistoryRequest}/>
+            )
+          })}
+        </ul>
       </HistoryContainer>
     }
 
@@ -170,6 +248,11 @@ class App extends React.Component{
             <EducationInput header='Education' school={school} studyTitle={studyTitle} 
             eduStart={eduStart} eduEnd={eduEnd} updateForm={this.updateForm} 
             buttonPurpose='Add' updateEduHistory={this.addEduHistory}/>
+
+            {workHistoryContainer}
+            <WorkExpInput header='Work Experience' companyName={companyName} position={position}
+            workStart={workStart} workEnd={workEnd} updateForm={this.updateForm} 
+            buttonPurpose='Add' updateWorkHistory={this.addWorkHistory}/>
           </form>
       </div>
     )

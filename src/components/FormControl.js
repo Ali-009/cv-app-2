@@ -12,7 +12,7 @@ class FormControl extends React.Component{
     }
 
     render(){
-        const {name, label, type, value} = this.props
+        const {name, label, type, value, children} = this.props
         if(type === null){
             type = 'text'
         }
@@ -22,6 +22,7 @@ class FormControl extends React.Component{
                 <input type={type} id={name} name={name}
                 onChange={this.handleChange}
                 value={value}/>
+                {children}
             </div>
         )
     }

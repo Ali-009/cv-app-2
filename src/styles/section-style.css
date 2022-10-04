@@ -69,7 +69,20 @@ fieldset{
     justify-self: end;
 }
 
+.form-control > .input-button{
+    align-self: flex-end;
+}
+
 .input-button:hover{
     background-color: hsl(210deg, 12%, 45%);
     cursor: pointer;
+}
+
+.section-container > .history-container{
+    margin: 0;
+}
+
+.section-container > .history-container > h3{
+    margin-top: 0;
+    border-bottom: solid thin lightgray;
 }
