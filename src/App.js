@@ -33,6 +33,8 @@ class App extends React.Component{
       position: '',
       workStart: '',
       workEnd: '',
+      mainTasksInput: '',
+      mainTasksArray: [],
       workHistory: [],
       workHistoryEdit: false,
       companyNameEdit: '',
@@ -57,6 +59,9 @@ class App extends React.Component{
     this.editWorkHistoryRequest = this.editWorkHistoryRequest.bind(this)
     this.editEduHistory = this.editEduHistory.bind(this)
     this.editWorkHistory = this.editWorkHistory.bind(this)
+
+    //Used for main tasks within the work experience section
+    this.updateMainTasks = this.updateMainTasks.bind(this)
   }
   
   updateForm(name, value){
@@ -179,10 +184,19 @@ class App extends React.Component{
     }))
   }
 
+  updateMainTasks(){
+    this.setState((state) => {
+      return {
+        mainTasksArray: state.mainTasksArray.concat(state.mainTasksInput)
+      }
+    })
+  }
+
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
     const {school, studyTitle, eduStart, eduEnd, eduHistory, eduHistoryEdit} = this.state
     const {companyName, position, workStart, workEnd, workHistory} = this.state
+    const {mainTasksInput, mainTasksArray} = this.state
 
     //conditionally render the education history container
     let eduHistoryContainer = null
@@ -251,8 +265,9 @@ class App extends React.Component{
 
             {workHistoryContainer}
             <WorkExpInput header='Work Experience' companyName={companyName} position={position}
-            workStart={workStart} workEnd={workEnd} updateForm={this.updateForm} 
-            buttonPurpose='Add' updateWorkHistory={this.addWorkHistory}/>
+            workStart={workStart} workEnd={workEnd} mainTasksInput={mainTasksInput} updateForm={this.updateForm} 
+            buttonPurpose='Add' updateWorkHistory={this.addWorkHistory} updateMainTasks={this.updateMainTasks}
+            mainTasksArray={mainTasksArray}/>
           </form>
       </div>
     )

@@ -2,11 +2,13 @@ import React from 'react'
 import FormControl from './FormControl'
 import InputSection from './InputSection'
 import HistoryContainer from './HistoryContainer'
+import uniqid from 'uniqid'
 
 class WorkExpInput extends React.Component{
     constructor(props){
         super(props)
         this.addWorkHistory = this.addWorkHistory.bind(this)
+        this.addMainTask = this.addMainTask.bind(this)
     }
 
     addWorkHistory(event){
@@ -14,8 +16,23 @@ class WorkExpInput extends React.Component{
         this.props.updateWorkHistory()
     }
 
+    addMainTask(event){
+        event.preventDefault()
+        this.props.updateMainTasks()
+    }
+
     render(){
-        const {header, companyName, position, workStart, workEnd, mainTasksInput, updateForm, buttonPurpose} = this.props
+        const {header, companyName, position, workStart, workEnd, updateForm, buttonPurpose} = this.props
+        const {mainTasksInput, mainTasksArray} = this.props
+        let mainTasksDisplay = null
+        if(mainTasksArray.length > 0){
+            mainTasksDisplay 
+            = mainTasksArray.map((mainTask, index) => {
+                return (
+                    <li key={uniqid()}>{mainTask}</li>
+                )
+            })
+        }
         return (
             <InputSection title={header}>
                 <FormControl name='companyName' label='Company Name' value={companyName} updateForm={updateForm} />
@@ -32,7 +49,7 @@ class WorkExpInput extends React.Component{
                     <button className='input-button' onClick={this.addMainTask}>Add</button>
                 </FormControl>
                 <HistoryContainer title='Main Tasks'>
-
+                    {mainTasksDisplay}
                 </HistoryContainer>
                 <button className="input-button" 
                 onClick={this.addWorkHistory}>{buttonPurpose}</button>
