@@ -54,6 +54,8 @@ class App extends React.Component{
     this.addHistory = this.addHistory.bind(this)
     this.addEduHistory = this.addEduHistory.bind(this)
     this.addWorkHistory = this.addWorkHistory.bind(this)
+    //reset input fields after the items have been added
+    this.resetInputFields = this.resetInputFields.bind(this)
     
     //Used for editing history arrays
     this.editHistory = this.editHistory.bind(this)
@@ -64,6 +66,7 @@ class App extends React.Component{
 
     //Used for main tasks within the work experience section
     this.updateMainTasks = this.updateMainTasks.bind(this)
+    this.updateMainTasksEdit = this.updateMainTasksEdit.bind(this)
   }
   
   updateForm(name, value){
@@ -83,11 +86,26 @@ class App extends React.Component{
   }
 
   //A generic function that is used for adding both education and work experience history
-  addHistory(historyItem, historyArray){
+  addHistory(historyObj, historyArray){
     const updatedHistory = historyArray.concat({
-      ...historyItem,
+      ...historyObj,
     })
     return updatedHistory
+  }
+
+  resetInputFields(historyObj){
+    //Reset the fields after the items have been added to history
+    for(const historyItem in historyObj){
+      if(historyItem === 'mainTasksArray'){
+        this.setState({
+          mainTasksArray: [],
+        })
+      } else {
+        this.setState({
+          [historyItem]: '',
+        })
+      }
+    }
   }
 
   addEduHistory(){
@@ -98,6 +116,9 @@ class App extends React.Component{
         eduHistory: this.addHistory(eduData, eduHistory)
       }
     })
+    const {school, studyTitle, eduStart, eduEnd} = this.state
+    const eduData = {school, studyTitle, eduStart, eduEnd}
+    this.resetInputFields(eduData)
   }
 
   addWorkHistory(){
@@ -108,6 +129,10 @@ class App extends React.Component{
         workHistory: this.addHistory(workData, workHistory)
       }
     })
+
+    const {companyName, position, workStart, workEnd, mainTasksInput, mainTasksArray} = this.state
+    const workData = {companyName, position, workStart, mainTasksInput, mainTasksArray, workEnd}
+    this.resetInputFields(workData)
   }
 
   //The request to edit history has to be separate for both education and work experience
@@ -173,7 +198,8 @@ class App extends React.Component{
       }
 
       return{
-        eduHistory: this.editHistory(eduHistory, editSource, editTarget, eduEditIndex)
+        eduHistory: this.editHistory(eduHistory, editSource, editTarget, eduEditIndex),
+        eduHistoryEdit: false 
       }
     })
   }
@@ -192,7 +218,8 @@ class App extends React.Component{
       }
 
       return{
-        workHistory: this.editHistory(workHistory, editSource, editTarget, workEditIndex)
+        workHistory: this.editHistory(workHistory, editSource, editTarget, workEditIndex),
+        workHistoryEdit: false
       }
     }))
   }
@@ -201,6 +228,14 @@ class App extends React.Component{
     this.setState((state) => {
       return {
         mainTasksArray: state.mainTasksArray.concat(state.mainTasksInput)
+      }
+    })
+  }
+
+  updateMainTasksEdit(){
+    this.setState((state) => {
+      return {
+        mainTasksArrayEdit: state.mainTasksArrayEdit.concat(state.mainTasksInputEdit)
       }
     })
   }
@@ -262,7 +297,7 @@ class App extends React.Component{
         updateEduHistory={this.editEduHistory}/>
     }
 
-    //conditionally rendering the work experience section
+    //conditionally rendering the work experience edit section
     let workEditSection = null;
     if(workHistoryEdit){
       const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit} = this.state
@@ -270,8 +305,10 @@ class App extends React.Component{
       workEditSection 
       = <WorkExpInput header='Edit Work Experience'
       buttonPurpose='Edit' companyName={companyNameEdit} position={positionEdit}
-      workStart={workStartEdit} workEnd={workEndEdit} mainTasksArray={mainTasksArrayEdit} 
-      updateForm={this.updateEditSection}/>
+      workStart={workStartEdit} workEnd={workEndEdit} mainTasksArray={mainTasksArrayEdit}
+      updateForm={this.updateEditSection}
+      updateMainTasks={this.updateMainTasksEdit}
+      updateWorkHistory={this.editWorkHistory}/>
     }
 
     return (
