@@ -44,6 +44,11 @@ class App extends React.Component{
       mainTasksInputEdit: '',
       mainTasksArrayEdit: [],
       workEditIndex: 0,
+      //below are state variables used for editing main tasks
+      mainTasksEdit: false,
+      mainTasksEditInput: '',
+      mainTasksEditInputEdit: '',
+      mainTasksEditIndex: '',
     }
     
     //Used to create React Controlled Inputs
@@ -67,6 +72,8 @@ class App extends React.Component{
     //Used for main tasks within the work experience section
     this.updateMainTasks = this.updateMainTasks.bind(this)
     this.updateMainTasksEdit = this.updateMainTasksEdit.bind(this)
+    this.editMainTasksRequest = this.editMainTasksRequest.bind(this)
+    this.editMainTasks = this.editMainTasks.bind(this)
   }
   
   updateForm(name, value){
@@ -133,6 +140,9 @@ class App extends React.Component{
     const {companyName, position, workStart, workEnd, mainTasksInput, mainTasksArray} = this.state
     const workData = {companyName, position, workStart, mainTasksInput, mainTasksArray, workEnd}
     this.resetInputFields(workData)
+    this.setState({
+      mainTasksEdit: false,
+    })
   }
 
   //The request to edit history has to be separate for both education and work experience
@@ -159,6 +169,33 @@ class App extends React.Component{
       workEndEdit: workEnd,
       mainTasksArrayEdit: mainTasksArray,
       workEditIndex: index,
+    })
+  }
+
+  editMainTasksRequest(mainTask, index){
+    this.setState({
+      mainTasksEdit: true,
+      mainTasksEditInput: mainTask,
+      mainTasksEditIndex: index,
+    })
+  }
+
+  //edits the array of MainTasks as part of the main form
+  editMainTasks(){
+    this.setState((state) => {
+      const updatedMainTasksArray = state.mainTasksArray.map((mainTask, index) => {
+        if(index === state.mainTasksEditIndex){
+          return state.mainTasksEditInput
+        } else {
+          return mainTask
+        }
+      })
+      return {
+        mainTasksArray: updatedMainTasksArray,
+      }
+    })
+    this.setState({
+      mainTasksEdit: false
     })
   }
 
@@ -245,6 +282,7 @@ class App extends React.Component{
     const {school, studyTitle, eduStart, eduEnd, eduHistory, eduHistoryEdit} = this.state
     const {companyName, position, workStart, workEnd, workHistory, workHistoryEdit} = this.state
     const {mainTasksInput, mainTasksArray} = this.state
+    const {mainTasksEdit, mainTasksEditInput} = this.state
 
     //conditionally render the education history container
     let eduHistoryContainer = null
@@ -330,7 +368,9 @@ class App extends React.Component{
             <WorkExpInput header='Work Experience' companyName={companyName} position={position}
             workStart={workStart} workEnd={workEnd} mainTasksInput={mainTasksInput} updateForm={this.updateForm} 
             buttonPurpose='Add' updateWorkHistory={this.addWorkHistory} updateMainTasks={this.updateMainTasks}
-            mainTasksArray={mainTasksArray}/>
+            mainTasksArray={mainTasksArray} editMainTasksRequest={this.editMainTasksRequest}
+            mainTasksEdit={mainTasksEdit} mainTasksEditInput={mainTasksEditInput}
+            editMainTasks={this.editMainTasks}/>
           </form>
       </div>
     )

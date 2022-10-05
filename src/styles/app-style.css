@@ -51,7 +51,7 @@ ul{
     margin-bottom: 12px;
 }
 
-.history-container li > button{
+.edit-button{
     appearance: none;
     border: none;
     outline: none;

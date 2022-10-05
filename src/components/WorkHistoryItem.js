@@ -26,7 +26,7 @@ class WorkHistoryItem extends React.Component{
         return (
             <div className="work-history-item-container">
                 <li>Worked in {companyName} as a {position} from {formattedStartDate} to {formattedEndDate}
-                <button onClick={this.handleHistoryEdit}>edit</button>
+                <button className='edit-button' onClick={this.handleHistoryEdit}>edit</button>
                 </li>
                 <HistoryContainer title='Main Tasks'>
                     {mainTasksDisplay}

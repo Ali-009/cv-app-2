@@ -19,7 +19,7 @@ class EduHistoryItem extends React.Component{
         const formattedEndDate = new Date(eduEnd).toLocaleDateString('en-GB')
         return (
             <li>Studied {studyTitle} in {school} from {formattedStartDate} to {formattedEndDate}
-            <button onClick={this.handleHistoryEdit}>edit</button></li>
+            <button className='edit-button' onClick={this.handleHistoryEdit}>edit</button></li>
         )
     }
 }

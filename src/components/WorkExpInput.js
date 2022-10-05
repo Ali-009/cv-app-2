@@ -10,6 +10,7 @@ class WorkExpInput extends React.Component{
         super(props)
         this.addWorkHistory = this.addWorkHistory.bind(this)
         this.addMainTask = this.addMainTask.bind(this)
+        this.editMainTasks = this.editMainTasks.bind(this)
     }
 
     addWorkHistory(event){
@@ -22,13 +23,28 @@ class WorkExpInput extends React.Component{
         this.props.updateMainTasks()
     }
 
+    editMainTasks(event){
+        event.preventDefault()
+        this.props.editMainTasks()
+    }
+
     render(){
         const {header, companyName, position, workStart, workEnd, updateForm, buttonPurpose} = this.props
         const {mainTasksInput, mainTasksArray} = this.props
+        const {mainTasksEdit, mainTasksEditInput, editMainTasksRequest} = this.props
         let mainTasksDisplay = null
+        //conditionally renering main tasks
         if(mainTasksArray.length > 0){
             mainTasksDisplay 
-            = <MainTasksDisplay mainTasksArray={mainTasksArray}/>
+            = <MainTasksDisplay mainTasksArray={mainTasksArray} editMainTasksRequest={editMainTasksRequest}/>
+        }
+        //conditionally rendering an input to edit a main task
+        let mainTasksEditControl = null
+        if(mainTasksEdit){
+            mainTasksEditControl =
+            <FormControl name='mainTasksEditInput' label='Edit Main Task' value={mainTasksEditInput} updateForm={updateForm}>
+                <button className='input-button' onClick={this.editMainTasks}>Edit</button>
+            </FormControl>
         }
         return (
             <InputSection title={header}>
@@ -46,6 +62,7 @@ class WorkExpInput extends React.Component{
                     <button className='input-button' onClick={this.addMainTask}>Add</button>
                 </FormControl>
                 <HistoryContainer title='Main Tasks'>
+                    {mainTasksEditControl}
                     {mainTasksDisplay}
                 </HistoryContainer>
                 <button className="input-button" 

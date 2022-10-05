@@ -86,3 +86,7 @@ fieldset{
     margin-top: 0;
     border-bottom: solid thin lightgray;
 }
+
+.history-container > .form-control{
+    margin-bottom: 12px
+}
