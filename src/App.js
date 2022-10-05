@@ -290,6 +290,9 @@ class App extends React.Component{
         workHistoryEdit: false
       }
     }))
+    this.setState({
+      mainTasksEditEdit: false
+    })
   }
 
   updateMainTasks(){
