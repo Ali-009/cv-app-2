@@ -90,3 +90,7 @@ fieldset{
 .history-container > .form-control{
     margin-bottom: 12px
 }
+
+.work-exp-input-button{
+    align-self: end;
+}

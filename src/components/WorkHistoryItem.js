@@ -21,7 +21,7 @@ class WorkHistoryItem extends React.Component{
         let mainTasksDisplay = null
         if(mainTasksArray.length > 0){
             mainTasksDisplay
-            = <MainTasksDisplay mainTasksArray={mainTasksArray} />
+            = <MainTasksDisplay mainTasksArray={mainTasksArray}/>
         }
         return (
             <div className="work-history-item-container">

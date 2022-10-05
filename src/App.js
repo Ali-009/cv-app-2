@@ -47,6 +47,9 @@ class App extends React.Component{
       //below are state variables used for editing main tasks
       mainTasksEdit: false,
       mainTasksEditInput: '',
+      mainTasksEditIndex: '',
+      //Editing the main tasks within a work experience section being edited
+      mainTasksEditEdit: false,
       mainTasksEditInputEdit: '',
       mainTasksEditIndex: '',
     }
@@ -74,6 +77,8 @@ class App extends React.Component{
     this.updateMainTasksEdit = this.updateMainTasksEdit.bind(this)
     this.editMainTasksRequest = this.editMainTasksRequest.bind(this)
     this.editMainTasks = this.editMainTasks.bind(this)
+    this.editMainTasksEditRequest = this.editMainTasksEditRequest.bind(this)
+    this.editMainTasksEdit = this.editMainTasksEdit.bind(this)
   }
   
   updateForm(name, value){
@@ -180,6 +185,14 @@ class App extends React.Component{
     })
   }
 
+  editMainTasksEditRequest(mainTask, index){
+    this.setState({
+      mainTasksEditEdit: true,
+      mainTasksEditInputEdit: mainTask,
+      mainTasksEditIndexEdit: index,
+    })
+  }
+
   //edits the array of MainTasks as part of the main form
   editMainTasks(){
     this.setState((state) => {
@@ -196,6 +209,24 @@ class App extends React.Component{
     })
     this.setState({
       mainTasksEdit: false
+    })
+  }
+
+  editMainTasksEdit(){
+    this.setState((state) => {
+      const updatedMainTasksArray = state.mainTasksArrayEdit.map((mainTask, index) => {
+        if(index === state.mainTasksEditIndexEdit){
+          return state.mainTasksEditInputEdit
+        } else {
+          return mainTask
+        }
+      })
+      return {
+        mainTasksArrayEdit: updatedMainTasksArray,
+      }
+    })
+    this.setState({
+      mainTasksEditEdit: false
     })
   }
 
@@ -339,6 +370,7 @@ class App extends React.Component{
     let workEditSection = null;
     if(workHistoryEdit){
       const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit} = this.state
+      const {mainTasksEditEdit, mainTasksEditInputEdit, mainTasksEditIndexEdit} = this.state
 
       workEditSection 
       = <WorkExpInput header='Edit Work Experience'
@@ -346,7 +378,11 @@ class App extends React.Component{
       workStart={workStartEdit} workEnd={workEndEdit} mainTasksArray={mainTasksArrayEdit}
       updateForm={this.updateEditSection}
       updateMainTasks={this.updateMainTasksEdit}
-      updateWorkHistory={this.editWorkHistory}/>
+      updateWorkHistory={this.editWorkHistory}
+      editMainTasksRequest={this.editMainTasksEditRequest}
+      mainTasksEdit={mainTasksEditEdit} mainTasksEditInput={mainTasksEditInputEdit} 
+      mainTasksEditIndex={mainTasksEditIndexEdit}
+      editMainTasks={this.editMainTasksEdit}/>
     }
 
     return (

@@ -15,9 +15,14 @@ class MainTaskItem extends React.Component{
     }
 
     render(){
+        const {mainTask, inWorkExpInput} = this.props
+        let editButton = null
+        if(inWorkExpInput){
+            editButton = <button className='edit-button' onClick={this.handleMainTasksEdit}>edit</button>
+        }
         return (
-            <li>{this.props.mainTask}
-                <button className='edit-button' onClick={this.handleMainTasksEdit}>edit</button>
+            <li>{mainTask}
+                {editButton}
             </li>
         )
     }
@@ -32,9 +37,9 @@ class MainTaskDisplay extends React.Component{
     render(){
         return (
             this.props.mainTasksArray.map((mainTask, index) => {
-                const {editMainTasksRequest} = this.props
+                const {editMainTasksRequest, inWorkExpInput} = this.props
                 return (
-                    <MainTaskItem key={uniqid()} mainTask={mainTask} mainTaskIndex={index} editMainTasksRequest={editMainTasksRequest} />
+                    <MainTaskItem key={uniqid()} mainTask={mainTask} mainTaskIndex={index} editMainTasksRequest={editMainTasksRequest} inWorkExpInput={inWorkExpInput}/>
                 )
             })
         )
