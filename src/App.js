@@ -23,12 +23,8 @@ class App extends React.Component{
       eduStart: '',
       eduEnd: '',
       eduHistory: [],
-      eduHistoryEdit: false,
-      schoolEdit: '',
-      studyTitleEdit: '',
-      eduStartEdit: '',
-      eduEndEdit: '',
-      eduEditIndex: 0,
+      eduBeingEdited: false,
+      eduEditIndex: null,
       companyName: '',
       position: '',
       workStart: '',
@@ -67,7 +63,6 @@ class App extends React.Component{
     
     //Used for editing history arrays
     this.editHistory = this.editHistory.bind(this)
-    this.editEduHistoryRequest = this.editEduHistoryRequest.bind(this)
     this.editWorkHistoryRequest = this.editWorkHistoryRequest.bind(this)
     this.editEduHistory = this.editEduHistory.bind(this)
     this.editWorkHistory = this.editWorkHistory.bind(this)
@@ -79,6 +74,9 @@ class App extends React.Component{
     this.editMainTasks = this.editMainTasks.bind(this)
     this.editMainTasksEditRequest = this.editMainTasksEditRequest.bind(this)
     this.editMainTasksEdit = this.editMainTasksEdit.bind(this)
+
+    //funcations after simplifying code
+    this.handleEduEditRequest = this.handleEduEditRequest.bind(this)
   }
   
   updateForm(name, value){
@@ -142,20 +140,6 @@ class App extends React.Component{
     this.resetInputFields(workData)
     this.setState({
       mainTasksEdit: false,
-    })
-  }
-
-  //The request to edit history has to be separate for both education and work experience
-  //due to the small differences between them. An abstraction for both is not worth the effort
-  editEduHistoryRequest(elementData, index){
-    const {school, studyTitle, eduStart, eduEnd} = elementData
-    this.setState({
-        eduHistoryEdit: true,
-        schoolEdit: school,
-        studyTitleEdit: studyTitle,
-        eduStartEdit: eduStart,
-        eduEndEdit: eduEnd,
-        eduEditIndex: index,
     })
   }
 
@@ -229,14 +213,14 @@ class App extends React.Component{
   editHistory(historyArray, sourceObj, targetObj, currentEditIndex){
     const updatedHistory = historyArray.map((historyElement, index) => {
       if(currentEditIndex === index){
-        for(const historyItem in targetObj){
-          if(historyItem === 'mainTasksArray'){
-            //This creates a deep copy of a mainTasksArray
-            for(let i = 0; i < sourceObj[historyItem+'Edit'].length; i++){
-              targetObj[historyItem][i] = sourceObj[historyItem+'Edit'][i]
+        for(const property in targetObj){
+          if(Array.isArray(targetObj[property])){
+            //This creates a deep copy of an array
+            for(let i = 0; i < sourceObj[property].length; i++){
+              targetObj[property][i] = sourceObj[property][i]
             }
           } else {
-            targetObj[historyItem] = sourceObj[historyItem+'Edit']
+            targetObj[property] = sourceObj[property]
           }
            
         }
@@ -245,25 +229,21 @@ class App extends React.Component{
         return historyElement
       }
     })
-
     return updatedHistory
   }
 
-  editEduHistory(){
+  editEduHistory(eduData, index){
     this.setState((state) => {
-      const {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit, eduHistory, eduEditIndex} = state
-      const editSource = {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit}
-      let editTarget = {
-        school: '',
-        studyTitle: '',
-        eduStart: '',
-        eduEnd: '',
-      }
-
-      return{
-        eduHistory: this.editHistory(eduHistory, editSource, editTarget, eduEditIndex),
-        eduHistoryEdit: false 
-      }
+        let targetObj = {
+          school: '',
+          studyTitle: '',
+          eduStart: '',
+          eduEnd: '',
+        }
+        return {
+          eduHistory: this.editHistory(state.eduHistory, eduData, targetObj, index),
+          eduEditIndex: null
+        }
     })
   }
 
@@ -306,9 +286,15 @@ class App extends React.Component{
     })
   }
 
+  handleEduEditRequest(index){
+    this.setState({
+      eduEditIndex: index
+    })
+  }
+
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
-    const {school, studyTitle, eduStart, eduEnd, eduHistory, eduHistoryEdit} = this.state
+    const {eduHistory, eduEditIndex} = this.state
     const {companyName, position, workStart, workEnd, workHistory, workHistoryEdit} = this.state
     const {mainTasksInput, mainTasksArray} = this.state
     const {mainTasksEdit, mainTasksEditInput} = this.state
@@ -320,11 +306,16 @@ class App extends React.Component{
       = <HistoryContainer title='Education History'>
           <ul>
             {eduHistory.map((eduHistoryElement, index) => {
-              return (
+              let beingEdited = false
+              if(eduEditIndex === index){
+                beingEdited = true
+              } return (
                 <EduHistoryItem key={uniqid()} 
-                eduHistoryElement={eduHistoryElement}
-                eduHistoryElementIndex={index}
-                editEduHistoryRequest={this.editEduHistoryRequest}/>
+                eduData={eduHistoryElement}
+                eduHistoryIndex={index}
+                requestEdit={this.handleEduEditRequest}
+                beingEdited={beingEdited}
+                editHistory={this.editEduHistory}/>
               )
             })}
           </ul>
@@ -342,27 +333,14 @@ class App extends React.Component{
               <WorkHistoryItem key={uniqid()}
               workHistoryElement={workHistoryElement}
               workHistoryElementIndex={index}
-              editWorkHistoryRequest={this.editWorkHistoryRequest}/>
+              editWorkHistoryRequest={this.editWorkHistoryRequest}
+              editHistory={this.editEduHistory}/>
             )
           })}
         </ul>
       </HistoryContainer>
     }
 
-    //conditionally rendering the education edit section
-    let eduHistoryEditSection = null;
-    if(eduHistoryEdit){
-        const {schoolEdit, studyTitleEdit, eduStartEdit, eduEndEdit} = 
-        this.state
-
-        eduHistoryEditSection =
-        <EducationInput header='Edit Education History' 
-        buttonPurpose='Edit'
-        school={schoolEdit} studyTitle={studyTitleEdit} 
-        eduStart={eduStartEdit} eduEnd={eduEndEdit} 
-        updateForm={this.updateEditSection}
-        updateEduHistory={this.editEduHistory}/>
-    }
 
     //conditionally rendering the work experience edit section
     let workEditSection = null;
@@ -391,7 +369,6 @@ class App extends React.Component{
             email={email} phoneNumber={phoneNumber} updateForm={this.updateForm}/>
 
             {eduHistoryContainer}
-            {eduHistoryEditSection}
 
             <EducationInput header='Education' buttonPurpose='Add' updateHistory={this.addEduHistory}/>
 

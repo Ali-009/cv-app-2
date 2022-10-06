@@ -40,9 +40,23 @@ class EducationInput extends React.Component{
         this.resetInputFields(eduData)
     }
 
+    componentDidMount(){
+        //If education data has been received, display it as values for the form controls
+        const {eduData} = this.props
+        if(eduData){
+            const {school, studyTitle, eduStart, eduEnd} = eduData
+            this.setState({
+                school,
+                studyTitle,
+                eduStart,
+                eduEnd
+            })
+        }
+    }
+
     render(){
+        const {header, buttonPurpose} = this.props 
         const {school, studyTitle, eduStart, eduEnd} = this.state
-        const {header, buttonPurpose} = this.props
         return (
             <InputSection title={header}>
                 <FormControl name='school' label='School'

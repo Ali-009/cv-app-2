@@ -1,25 +1,43 @@
 import React from 'react'
+import EducationInput from './EducationInput'
 
 class EduHistoryItem extends React.Component{
     constructor(props){
         super(props)
-        this.handleHistoryEdit = this.handleHistoryEdit.bind(this)
+        this.editEduHistory = this.editEduHistory.bind(this)
+        this.displayEduEdit = this.displayEduEdit.bind(this)
     }
 
-    handleHistoryEdit(event){
-        const {editEduHistoryRequest, eduHistoryElement, eduHistoryElementIndex} 
-        = this.props
-        event.preventDefault()
-        editEduHistoryRequest(eduHistoryElement, eduHistoryElementIndex)
+    displayEduEdit(event){
+        event.preventDefault() 
+        const {eduHistoryIndex, requestEdit} = this.props
+        requestEdit(eduHistoryIndex)
+    }
+
+    editEduHistory(eduData){
+        const {editHistory, eduHistoryIndex} = this.props
+        editHistory(eduData, eduHistoryIndex)
     }
 
     render() {
-        const {studyTitle, school, eduStart, eduEnd} = this.props.eduHistoryElement
+        const {studyTitle, school, eduStart, eduEnd} = this.props.eduData
         const formattedStartDate = new Date(eduStart).toLocaleDateString('en-GB')
         const formattedEndDate = new Date(eduEnd).toLocaleDateString('en-GB')
+
+        //conditionally rendering the education edit section
+        let eduHistoryEditSection = null;
+        if(this.props.beingEdited){
+            eduHistoryEditSection =
+            <EducationInput header='Edit Education History' buttonPurpose='Edit' 
+            eduData={this.props.eduData} updateHistory={this.editEduHistory}/>
+        }
+
         return (
-            <li>Studied {studyTitle} in {school} from {formattedStartDate} to {formattedEndDate}
-            <button className='edit-button' onClick={this.handleHistoryEdit}>edit</button></li>
+            <div>
+                <li>Studied {studyTitle} in {school} from {formattedStartDate} to {formattedEndDate}
+                <button className='edit-button' onClick={this.displayEduEdit}>edit</button></li>
+                {eduHistoryEditSection}
+            </div>
         )
     }
 }
