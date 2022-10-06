@@ -120,17 +120,12 @@ class App extends React.Component{
     }
   }
 
-  addEduHistory(){
+  addEduHistory(eduData){
     this.setState((state) => {
-      const {school, studyTitle, eduStart, eduEnd, eduHistory} = state
-      const eduData = {school, studyTitle, eduStart, eduEnd}
       return {
-        eduHistory: this.addHistory(eduData, eduHistory)
+        eduHistory: this.addHistory(eduData, state.eduHistory)
       }
     })
-    const {school, studyTitle, eduStart, eduEnd} = this.state
-    const eduData = {school, studyTitle, eduStart, eduEnd}
-    this.resetInputFields(eduData)
   }
 
   addWorkHistory(){
@@ -398,9 +393,7 @@ class App extends React.Component{
             {eduHistoryContainer}
             {eduHistoryEditSection}
 
-            <EducationInput header='Education' school={school} studyTitle={studyTitle} 
-            eduStart={eduStart} eduEnd={eduEnd} updateForm={this.updateForm} 
-            buttonPurpose='Add' updateEduHistory={this.addEduHistory}/>
+            <EducationInput header='Education' buttonPurpose='Add' updateHistory={this.addEduHistory}/>
 
             {workHistoryContainer}
             {workEditSection}
