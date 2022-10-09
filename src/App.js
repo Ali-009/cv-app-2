@@ -33,10 +33,6 @@ class App extends React.Component{
       workHistory: [],
       workBeingEdited: false,
       workEditIndex: null,
-      //below are state variables used for editing main tasks
-      mainTasksEdit: false,
-      mainTasksEditInput: '',
-      mainTasksEditIndex: '',
     }
     
     //Used to create React Controlled Inputs
@@ -83,25 +79,6 @@ class App extends React.Component{
       return {
         workHistory: this.addHistory(workData, state.workHistory)
       }
-    })
-  }
-
-  //edits the array of MainTasks as part of the main form
-  editMainTasks(){
-    this.setState((state) => {
-      const updatedMainTasksArray = state.mainTasksArray.map((mainTask, index) => {
-        if(index === state.mainTasksEditIndex){
-          return state.mainTasksEditInput
-        } else {
-          return mainTask
-        }
-      })
-      return {
-        mainTasksArray: updatedMainTasksArray,
-      }
-    })
-    this.setState({
-      mainTasksEdit: false
     })
   }
 
