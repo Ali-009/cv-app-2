@@ -23,19 +23,19 @@ class WorkExpInput extends React.Component{
         this.resetInputFields= this.resetInputFields.bind(this)
     }
 
+
+    updateForm(name, value){
+        this.setState({
+          [name] : value
+        })
+    }
+
     addMainTask(event){
         event.preventDefault()
         this.setState((state) => {
             return {
                 mainTasksArray: state.mainTasksArray.concat(state.mainTasksInput)
             }
-        })
-    }
-
-
-    updateForm(name, value){
-        this.setState({
-          [name] : value
         })
     }
 

@@ -37,10 +37,6 @@ class App extends React.Component{
       mainTasksEdit: false,
       mainTasksEditInput: '',
       mainTasksEditIndex: '',
-      //Editing the main tasks within a work experience section being edited
-      mainTasksEditEdit: false,
-      mainTasksEditInputEdit: '',
-      mainTasksEditIndex: '',
     }
     
     //Used to create React Controlled Inputs
@@ -50,17 +46,14 @@ class App extends React.Component{
     this.addHistory = this.addHistory.bind(this)
     this.addEduHistory = this.addEduHistory.bind(this)
     this.addWorkHistory = this.addWorkHistory.bind(this)
-    //reset input fields after the items have been added
-    this.resetInputFields = this.resetInputFields.bind(this)
     
     //Used for editing history arrays
     this.editHistory = this.editHistory.bind(this)
-    this.editWorkHistoryRequest = this.editWorkHistoryRequest.bind(this)
     this.editEduHistory = this.editEduHistory.bind(this)
     this.editWorkHistory = this.editWorkHistory.bind(this)
 
-    //funcations after simplifying code
     this.handleEduEditRequest = this.handleEduEditRequest.bind(this)
+    this.handleWorkEditRequest = this.handleWorkEditRequest.bind(this)
   }
   
   updateForm(name, value){
@@ -77,21 +70,6 @@ class App extends React.Component{
     return updatedHistory
   }
 
-  resetInputFields(historyObj){
-    //Reset the fields after the items have been added to history
-    for(const historyItem in historyObj){
-      if(historyItem === 'mainTasksArray'){
-        this.setState({
-          mainTasksArray: [],
-        })
-      } else {
-        this.setState({
-          [historyItem]: '',
-        })
-      }
-    }
-  }
-
   addEduHistory(eduData){
     this.setState((state) => {
       return {
@@ -105,35 +83,6 @@ class App extends React.Component{
       return {
         workHistory: this.addHistory(workData, state.workHistory)
       }
-    })
-  }
-
-  editWorkHistoryRequest(elementData, index){
-    const {companyName, position, workStart, workEnd, mainTasksArray} = elementData
-    this.setState({
-      workHistoryEdit: true,
-      companyNameEdit: companyName,
-      positionEdit: position,
-      workStartEdit: workStart,
-      workEndEdit: workEnd,
-      mainTasksArrayEdit: mainTasksArray,
-      workEditIndex: index,
-    })
-  }
-
-  editMainTasksRequest(mainTask, index){
-    this.setState({
-      mainTasksEdit: true,
-      mainTasksEditInput: mainTask,
-      mainTasksEditIndex: index,
-    })
-  }
-
-  editMainTasksEditRequest(mainTask, index){
-    this.setState({
-      mainTasksEditEdit: true,
-      mainTasksEditInputEdit: mainTask,
-      mainTasksEditIndexEdit: index,
     })
   }
 
@@ -153,24 +102,6 @@ class App extends React.Component{
     })
     this.setState({
       mainTasksEdit: false
-    })
-  }
-
-  editMainTasksEdit(){
-    this.setState((state) => {
-      const updatedMainTasksArray = state.mainTasksArrayEdit.map((mainTask, index) => {
-        if(index === state.mainTasksEditIndexEdit){
-          return state.mainTasksEditInputEdit
-        } else {
-          return mainTask
-        }
-      })
-      return {
-        mainTasksArrayEdit: updatedMainTasksArray,
-      }
-    })
-    this.setState({
-      mainTasksEditEdit: false
     })
   }
 
@@ -212,32 +143,31 @@ class App extends React.Component{
     })
   }
 
-  editWorkHistory(){
-    this.setState((state => {
-      const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit} = state
-      const {workHistory, workEditIndex} = state
-      const editSource = {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit}
-      let editTarget = {
+  editWorkHistory(workData, index){
+    this.setState((state) => {
+      let targetObj = {
         companyName: '',
         position: '',
         workStart: '',
         workEnd: '',
         mainTasksArray: [],
       }
-
-      return{
-        workHistory: this.editHistory(workHistory, editSource, editTarget, workEditIndex),
-        workHistoryEdit: false
+      return {
+        workHistory: this.editHistory(state.workHistory, workData, targetObj, index),
+        workEditIndex: null
       }
-    }))
-    this.setState({
-      mainTasksEditEdit: false
     })
   }
 
   handleEduEditRequest(index){
     this.setState({
       eduEditIndex: index
+    })
+  }
+
+  handleWorkEditRequest(index){
+    this.setState({
+      workEditIndex: index
     })
   }
 
@@ -276,12 +206,16 @@ class App extends React.Component{
       = <HistoryContainer title='Work History'>
         <ul>
           {workHistory.map((workHistoryElement, index) => {
-            return (
+            let beingEdited = null
+            if(workEditIndex === index){
+              beingEdited = true
+            } return (
               <WorkHistoryItem key={uniqid()}
-              workHistoryElement={workHistoryElement}
-              workHistoryElementIndex={index}
-              editWorkHistoryRequest={this.editWorkHistoryRequest}
-              editHistory={this.editEduHistory}/>
+              workData={workHistoryElement}
+              workHistoryIndex={index}
+              requestEdit={this.handleWorkEditRequest}
+              beingEdited={beingEdited}
+              editHistory={this.editWorkHistory}/>
             )
           })}
         </ul>
