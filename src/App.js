@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PersonalInfoInput from './components/PersonalInfoInput';
 import EducationInput from './components/EducationInput';
@@ -32,14 +31,8 @@ class App extends React.Component{
       mainTasksInput: '',
       mainTasksArray: [],
       workHistory: [],
-      workHistoryEdit: false,
-      companyNameEdit: '',
-      positionEdit: '',
-      workStartEdit: '',
-      workEndEdit: '',
-      mainTasksInputEdit: '',
-      mainTasksArrayEdit: [],
-      workEditIndex: 0,
+      workBeingEdited: false,
+      workEditIndex: null,
       //below are state variables used for editing main tasks
       mainTasksEdit: false,
       mainTasksEditInput: '',
@@ -52,7 +45,6 @@ class App extends React.Component{
     
     //Used to create React Controlled Inputs
     this.updateForm = this.updateForm.bind(this)
-    this.updateEditSection = this.updateEditSection.bind(this)
     
     //Used to add an item to a history array
     this.addHistory = this.addHistory.bind(this)
@@ -67,14 +59,6 @@ class App extends React.Component{
     this.editEduHistory = this.editEduHistory.bind(this)
     this.editWorkHistory = this.editWorkHistory.bind(this)
 
-    //Used for main tasks within the work experience section
-    this.updateMainTasks = this.updateMainTasks.bind(this)
-    this.updateMainTasksEdit = this.updateMainTasksEdit.bind(this)
-    this.editMainTasksRequest = this.editMainTasksRequest.bind(this)
-    this.editMainTasks = this.editMainTasks.bind(this)
-    this.editMainTasksEditRequest = this.editMainTasksEditRequest.bind(this)
-    this.editMainTasksEdit = this.editMainTasksEdit.bind(this)
-
     //funcations after simplifying code
     this.handleEduEditRequest = this.handleEduEditRequest.bind(this)
   }
@@ -82,16 +66,6 @@ class App extends React.Component{
   updateForm(name, value){
     this.setState({
       [name] : value
-    })
-  }
-
-  //Controlled inputs for edit sections of the form
-  //To the section components, both forms of updating the form are identical and are referenced using this.props.updateForm
-  //The state member variables for editing are named similar to the ones in MainForm and only have 'Edit' at the end of their key
-  //The function below is also reusable for editing experience section
-  updateEditSection(key, value){
-    this.setState({
-        [key + 'Edit']: value,
     })
   }
 
@@ -126,20 +100,11 @@ class App extends React.Component{
     })
   }
 
-  addWorkHistory(){
+  addWorkHistory(workData){
     this.setState((state) => {
-      const {companyName, position, workStart, workEnd, mainTasksArray, workHistory} = state
-      const workData = {companyName, position, workStart, mainTasksArray, workEnd}
-      return{
-        workHistory: this.addHistory(workData, workHistory)
+      return {
+        workHistory: this.addHistory(workData, state.workHistory)
       }
-    })
-
-    const {companyName, position, workStart, workEnd, mainTasksInput, mainTasksArray} = this.state
-    const workData = {companyName, position, workStart, mainTasksInput, mainTasksArray, workEnd}
-    this.resetInputFields(workData)
-    this.setState({
-      mainTasksEdit: false,
     })
   }
 
@@ -270,22 +235,6 @@ class App extends React.Component{
     })
   }
 
-  updateMainTasks(){
-    this.setState((state) => {
-      return {
-        mainTasksArray: state.mainTasksArray.concat(state.mainTasksInput)
-      }
-    })
-  }
-
-  updateMainTasksEdit(){
-    this.setState((state) => {
-      return {
-        mainTasksArrayEdit: state.mainTasksArrayEdit.concat(state.mainTasksInputEdit)
-      }
-    })
-  }
-
   handleEduEditRequest(index){
     this.setState({
       eduEditIndex: index
@@ -295,9 +244,7 @@ class App extends React.Component{
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
     const {eduHistory, eduEditIndex} = this.state
-    const {companyName, position, workStart, workEnd, workHistory, workHistoryEdit} = this.state
-    const {mainTasksInput, mainTasksArray} = this.state
-    const {mainTasksEdit, mainTasksEditInput} = this.state
+    const {workHistory, workEditIndex} = this.state
 
     //conditionally render the education history container
     let eduHistoryContainer = null
@@ -341,26 +288,6 @@ class App extends React.Component{
       </HistoryContainer>
     }
 
-
-    //conditionally rendering the work experience edit section
-    let workEditSection = null;
-    if(workHistoryEdit){
-      const {companyNameEdit, positionEdit, workStartEdit, workEndEdit, mainTasksArrayEdit} = this.state
-      const {mainTasksEditEdit, mainTasksEditInputEdit, mainTasksEditIndexEdit} = this.state
-
-      workEditSection 
-      = <WorkExpInput header='Edit Work Experience'
-      buttonPurpose='Edit' companyName={companyNameEdit} position={positionEdit}
-      workStart={workStartEdit} workEnd={workEndEdit} mainTasksArray={mainTasksArrayEdit}
-      updateForm={this.updateEditSection}
-      updateMainTasks={this.updateMainTasksEdit}
-      updateWorkHistory={this.editWorkHistory}
-      editMainTasksRequest={this.editMainTasksEditRequest}
-      mainTasksEdit={mainTasksEditEdit} mainTasksEditInput={mainTasksEditInputEdit} 
-      mainTasksEditIndex={mainTasksEditIndexEdit}
-      editMainTasks={this.editMainTasksEdit}/>
-    }
-
     return (
       <div className="app-container">
           <h1>CV Application</h1>  
@@ -369,17 +296,11 @@ class App extends React.Component{
             email={email} phoneNumber={phoneNumber} updateForm={this.updateForm}/>
 
             {eduHistoryContainer}
-
             <EducationInput header='Education' buttonPurpose='Add' updateHistory={this.addEduHistory}/>
 
             {workHistoryContainer}
-            {workEditSection}
-            <WorkExpInput header='Work Experience' companyName={companyName} position={position}
-            workStart={workStart} workEnd={workEnd} mainTasksInput={mainTasksInput} updateForm={this.updateForm} 
-            buttonPurpose='Add' updateWorkHistory={this.addWorkHistory} updateMainTasks={this.updateMainTasks}
-            mainTasksArray={mainTasksArray} editMainTasksRequest={this.editMainTasksRequest}
-            mainTasksEdit={mainTasksEdit} mainTasksEditInput={mainTasksEditInput}
-            editMainTasks={this.editMainTasks}/>
+            <WorkExpInput header='Work Experience'
+            buttonPurpose='Add' updateHistory={this.addWorkHistory}/>
           </form>
       </div>
     )

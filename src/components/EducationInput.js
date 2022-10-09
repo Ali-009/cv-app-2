@@ -11,8 +11,8 @@ class EducationInput extends React.Component{
             eduStart: '',
             eduEnd: '',
         }
-        this.updateHistory = this.updateHistory.bind(this)
         this.updateForm = this.updateForm.bind(this)
+        this.updateHistory = this.updateHistory.bind(this)
         this.resetInputFields = this.resetInputFields.bind(this)
     }
 
@@ -42,6 +42,7 @@ class EducationInput extends React.Component{
 
     componentDidMount(){
         //If education data has been received, display it as values for the form controls
+        //This happens when the data is being edited
         const {eduData} = this.props
         if(eduData){
             const {school, studyTitle, eduStart, eduEnd} = eduData
