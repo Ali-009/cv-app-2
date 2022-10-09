@@ -94,3 +94,14 @@ fieldset{
 .work-exp-input-button{
     align-self: end;
 }
+
+.mainTaskEdit.form-control{
+    display: flex;
+    flex-flow: row nowrap;
+
+}
+
+.mainTaskEdit.form-control > .input-button{
+    margin-top: 0px;
+    margin-left: 12px;
+}

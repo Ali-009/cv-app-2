@@ -12,12 +12,16 @@ class FormControl extends React.Component{
     }
 
     render(){
-        const {name, label, type, value, children} = this.props
+        const {name, label, type, value, children, additionalStyling} = this.props
         if(type === null){
             type = 'text'
         }
+        let additionalClasses = ''
+        if(additionalStyling){
+            additionalClasses = additionalStyling
+        }
         return(
-            <div className="form-control">
+            <div className={'form-control '+additionalClasses}>
                 <label htmlFor={name}>{label}</label>
                 <input type={type} id={name} name={name}
                 onChange={this.handleChange}

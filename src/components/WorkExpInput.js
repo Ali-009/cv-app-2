@@ -2,6 +2,7 @@ import React from 'react'
 import FormControl from './FormControl'
 import InputSection from './InputSection'
 import HistoryContainer from './HistoryContainer'
+import MainTasksDisplay from './MainTasksDisplay'
 import uniqid from 'uniqid'
 
 class WorkExpInput extends React.Component{
@@ -14,11 +15,16 @@ class WorkExpInput extends React.Component{
             workEnd: '',
             mainTasksInput: '',
             mainTasksArray: [],
-            //a boolean to indicate that a child component is inside the WorkExpInput component
-            //inWorkExpInput: true
+            mainTaskEdit: '',
+            mainTaskEditIndex: null,
+            mainTasksBeingEdited: false,
+            //a boolean to indicate that an element is within WorkExpInput
+            inWorkExpInput: true,
         }
         this.updateForm = this.updateForm.bind(this)
         this.addMainTask = this.addMainTask.bind(this)
+        this.handleMainTaskEdit = this.handleMainTaskEdit.bind(this)
+        this.editMainTask = this.editMainTask.bind(this)
         this.updateHistory = this.updateHistory.bind(this)
         this.resetInputFields= this.resetInputFields.bind(this)
     }
@@ -57,6 +63,32 @@ class WorkExpInput extends React.Component{
         this.resetInputFields(workData)
     }
 
+    handleMainTaskEdit(index){
+        this.setState((state) => {
+            return {
+                mainTasksBeingEdited: true,
+                mainTaskEdit: state.mainTasksArray[index],
+                mainTaskEditIndex: index,
+            }
+        })
+    }
+
+    editMainTask(event){
+        event.preventDefault()
+        this.setState((state) => {
+                return {
+                    mainTasksArray: state.mainTasksArray.map((mainTask, index) => {
+                        if(state.mainTaskEditIndex === index){
+                            return state.mainTaskEdit
+                        } else {
+                            return mainTask
+                        }
+                    }),
+                    mainTasksBeingEdited: false,
+                }
+        })
+    }
+
     componentDidMount(){
         const {workData} = this.props
         if(workData){
@@ -76,16 +108,26 @@ class WorkExpInput extends React.Component{
         const {header, buttonPurpose} = this.props
         const {companyName, position, workStart, workEnd} = this.state
 
-        const {mainTasksInput, mainTasksArray} = this.state
+        const {mainTasksInput, mainTasksArray, mainTaskEdit, inWorkExpInput, mainTasksBeingEdited} = this.state
+
+        //conditionally render mainTasksEditField
+        let mainTasksEditField = null
+        if(mainTasksBeingEdited){
+            mainTasksEditField = <FormControl additionalStyling='mainTaskEdit' name='mainTaskEdit' label='' value={mainTaskEdit} updateForm={this.updateForm}>
+                <button className='input-button' onClick={this.editMainTask}>Edit</button>
+            </FormControl>
+        }
         
         //conditionally render mainTasksArray
         let mainTasksContainer = null
         if(mainTasksArray.length > 0){
             mainTasksContainer = <HistoryContainer className='main-tasks-container' title='Main Tasks'>
+                {mainTasksEditField}
                 <ul>
-                    {mainTasksArray.map((mainTask) => {
-                        return <li key={uniqid()}>{mainTask}</li>
-                    })}
+                    <MainTasksDisplay 
+                    mainTasksArray={mainTasksArray}
+                    requestEdit={this.handleMainTaskEdit}
+                    inWorkExpInput={inWorkExpInput}/>
                 </ul>
             </HistoryContainer>
         }

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import uniqid from 'uniqid'
 
 class MainTaskItem extends React.Component{
@@ -9,9 +8,9 @@ class MainTaskItem extends React.Component{
     }
 
     handleMainTasksEdit(event){
-        const {editMainTasksRequest, mainTask, mainTaskIndex} = this.props
         event.preventDefault()
-        editMainTasksRequest(mainTask, mainTaskIndex)
+        const {requestEdit, mainTaskIndex} = this.props
+        requestEdit(mainTaskIndex)
     }
 
     render(){
@@ -33,16 +32,17 @@ class MainTaskDisplay extends React.Component{
         super(props)
     }
 
-
     render(){
-        return (
-            this.props.mainTasksArray.map((mainTask, index) => {
-                const {editMainTasksRequest, inWorkExpInput} = this.props
+        const {mainTasksArray, requestEdit, inWorkExpInput} = this.props
+        let mainTasksList = []
+        if(mainTasksArray.length > 0){
+            mainTasksList = this.props.mainTasksArray.map((mainTask, index) => {
                 return (
-                    <MainTaskItem key={uniqid()} mainTask={mainTask} mainTaskIndex={index} editMainTasksRequest={editMainTasksRequest} inWorkExpInput={inWorkExpInput}/>
+                    <MainTaskItem key={uniqid()} mainTask={mainTask} mainTaskIndex={index} requestEdit={requestEdit} inWorkExpInput={inWorkExpInput}/>
                 )
             })
-        )
+        }
+        return mainTasksList
     }
 }
 
