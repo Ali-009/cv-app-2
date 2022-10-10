@@ -52,6 +52,9 @@ class WorkExpInput extends React.Component{
               [historyItem]: '',
             })
         }
+        this.setState({
+            mainTasksInput: '',
+        })
     }
 
     updateHistory(event){

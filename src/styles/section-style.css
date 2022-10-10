@@ -105,3 +105,12 @@ fieldset{
     margin-top: 0px;
     margin-left: 12px;
 }
+
+input[type="date"]{
+    font-family: sans-serif
+}
+
+input[type="date"]::placeholder{
+    color: lightgray;
+    font-style: italic;
+}
