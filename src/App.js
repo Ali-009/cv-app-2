@@ -16,6 +16,7 @@ class App extends React.Component{
       firstName: '',
       lastName: '',
       email: '',
+      aboutMe: '',
       phoneNumber: '',
       eduHistory: [],
       eduBeingEdited: false,
@@ -164,7 +165,7 @@ class App extends React.Component{
   }
 
   render(){
-    const {firstName, lastName, email, phoneNumber} = this.state
+    const {firstName, lastName, email, aboutMe, phoneNumber} = this.state
     const {eduHistory, eduEditIndex} = this.state
     const {workHistory, workEditIndex} = this.state
 
@@ -172,7 +173,7 @@ class App extends React.Component{
     let eduHistoryContainer = null
     if(eduHistory.length > 0){
       eduHistoryContainer 
-      = <HistoryContainer title='Education History'>
+      = <HistoryContainer title='Education'>
           <ul>
             {eduHistory.map((eduHistoryElement, index) => {
               let beingEdited = false
@@ -196,7 +197,7 @@ class App extends React.Component{
     let workHistoryContainer = null
     if(workHistory.length > 0){
       workHistoryContainer 
-      = <HistoryContainer title='Work History'>
+      = <HistoryContainer title='Work Experience'>
         <ul>
           {workHistory.map((workHistoryElement, index) => {
             let beingEdited = null
@@ -221,7 +222,7 @@ class App extends React.Component{
           <h1>CV Application</h1>  
           <form action="#">
             <PersonalInfoInput firstName={firstName} lastName={lastName}
-            email={email} phoneNumber={phoneNumber} updateForm={this.updateForm}/>
+            email={email} phoneNumber={phoneNumber} aboutMe={aboutMe} updateForm={this.updateForm}/>
 
             {eduHistoryContainer}
             <EducationInput header='Education' buttonPurpose='Add' updateHistory={this.addEduHistory}/>

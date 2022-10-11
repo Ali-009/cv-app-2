@@ -28,7 +28,7 @@ body{
 }
 
 form{
-    width: auto;
+    min-width: 720px;
 }
 
 .history-container{
@@ -110,6 +110,6 @@ ul{
 .main-tasks-container li::before{
     content: '⬤';
     font-size: 6px;
-    margin-right: 6px;
+    margin-right: 8px;
     padding-top: 5px;
 }
