@@ -1,4 +1,6 @@
 import React from 'react'
+import HistoryContainer from './HistoryContainer'
+import '../styles/final-output.css'
 
 class FinalOutput extends React.Component{
     constructor(props){
@@ -16,12 +18,13 @@ class FinalOutput extends React.Component{
                     <p>{email}</p>
                     <p>{phoneNumber}</p>
                 </div>
-                <div className='cv-about-me'>
-                    <h2>About Me</h2>
-                    <p>{aboutMe}</p>
+                <div className="cv-main-information">
+                    <HistoryContainer title='About Me'>
+                        <p>{aboutMe}</p>
+                    </HistoryContainer>
+                    {eduHistoryContainer}
+                    {workHistoryContainer}
                 </div>
-                {eduHistoryContainer}
-                {workHistoryContainer}
             </div>
         )
     }
