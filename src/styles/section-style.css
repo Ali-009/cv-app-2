@@ -63,6 +63,7 @@ fieldset{
 
 .form-control > textarea{
     padding-top: 6px;
+    height: 92px;
 }
 
 
@@ -94,6 +95,11 @@ fieldset{
 .section-container > .history-container > h3{
     margin-top: 0;
     border-bottom: solid thin lightgray;
+}
+
+fieldset:last-of-type .section-container{
+    border-bottom: solid thin lightgray;
+    padding-bottom: 24px;
 }
 
 .history-container > .form-control{

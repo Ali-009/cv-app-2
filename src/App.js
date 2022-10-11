@@ -5,6 +5,7 @@ import WorkExpInput from './components/WorkExpInput';
 import HistoryContainer from './components/HistoryContainer';
 import EduHistoryItem from './components/EduHistoryItem';
 import WorkHistoryItem from './components/WorkHistoryItem';
+import FinalOutput from './components/FinalOutput'
 
 import uniqid from 'uniqid'
 import './styles/app-style.css'
@@ -24,6 +25,7 @@ class App extends React.Component{
       workHistory: [],
       workBeingEdited: false,
       workEditIndex: null,
+      formSubmitted: false,
     }
     
     //Used to create React Controlled Inputs
@@ -46,6 +48,10 @@ class App extends React.Component{
     //Used for removing items from history
     this.removeEduHistoryItem = this.removeEduHistoryItem.bind(this)
     this.removeWorkHistoryItem = this.removeWorkHistoryItem.bind(this)
+
+    //Form submission functions
+    this.submitForm = this.submitForm.bind(this)
+    this.displayForm = this.displayForm.bind(this)
   }
   
   updateForm(name, value){
@@ -164,10 +170,25 @@ class App extends React.Component{
     })
   }
 
+  submitForm(event){
+    event.preventDefault()
+    this.setState({
+      formSubmitted: true,
+    })
+  }
+
+  displayForm(event){
+    event.preventDefault()
+    this.setState({
+      formSubmitted: false,
+    })
+  }
+
   render(){
     const {firstName, lastName, email, aboutMe, phoneNumber} = this.state
     const {eduHistory, eduEditIndex} = this.state
     const {workHistory, workEditIndex} = this.state
+    const {formSubmitted} = this.state
 
     //conditionally render the education history container
     let eduHistoryContainer = null
@@ -217,8 +238,11 @@ class App extends React.Component{
       </HistoryContainer>
     }
 
-    return (
-      <div className="app-container">
+    //display input fields or the final submitted form based on user interaction
+    let pageDisplay = null
+    if(!formSubmitted){
+      pageDisplay
+      = <div className="app-container">
           <h1>CV Application</h1>  
           <form action="#">
             <PersonalInfoInput firstName={firstName} lastName={lastName}
@@ -230,9 +254,19 @@ class App extends React.Component{
             {workHistoryContainer}
             <WorkExpInput header='Work Experience'
             buttonPurpose='Add' updateHistory={this.addWorkHistory}/>
+            <button className='input-button submit-button' onClick={this.submitForm}>Submit CV</button>
           </form>
       </div>
-    )
+    } else {
+      pageDisplay
+      = <div className="app-container">
+        <button className='input-button back-button' onClick={this.displayForm}>Back</button>
+        <FinalOutput firstName={firstName} lastName={lastName} email={email} phoneNumber={phoneNumber} aboutMe={aboutMe}
+        eduHistoryContainer={eduHistoryContainer} workHistoryContainer={workHistoryContainer}/>
+      </div>
+    }
+
+    return pageDisplay
   }
 }
 
