@@ -132,9 +132,9 @@ class WorkExpInput extends React.Component{
         let mainTasksEditField = null
         if(mainTasksBeingEdited){
             mainTasksEditField 
-            = <FormControl additionalStyling='mainTaskEdit' name='mainTaskEdit' 
+            = <FormControl additionalStyling='mainTaskControl' name='mainTaskEdit' 
             label='' value={mainTaskEdit} updateForm={this.updateForm}>
-                <button className='input-button' onClick={this.editMainTask}>Edit</button>
+                <button className='input-button' onClick={this.editMainTask}>Edit Main Task</button>
             </FormControl>
         }
         
@@ -166,7 +166,7 @@ class WorkExpInput extends React.Component{
                 type='date'/>
                 <FormControl name='mainTasksInput' label='Main Tasks' value={mainTasksInput}
                 updateForm={this.updateForm}>
-                    <button className='input-button' onClick={this.addMainTask}>Add</button>
+                    <button className='input-button' onClick={this.addMainTask}>Add Main Task</button>
                 </FormControl>
                 {mainTasksContainer}
                 <button className="input-button work-exp-input-button" 

@@ -56,10 +56,10 @@ class WorkHistoryItem extends React.Component{
             workData={this.props.workData} updateHistory={this.editWorkHistory}/>
         }
         return (
-            <div className="work-history-item-container">
-                <li>Worked in {companyName} as a {position} from {formattedStartDate} to {formattedEndDate}
-                <button className='edit-button' onClick={this.displayWorkEdit}>edit</button>
-                <button className='edit-button remove-button' onClick={this.removeItem}>remove</button>
+            <div className="history-item work-history-item">
+                <li>Worked at {companyName} as a {position} from {formattedStartDate} to {formattedEndDate}
+                <button className='history-button edit-button' onClick={this.displayWorkEdit}>edit</button>
+                <button className='history-button remove-button' onClick={this.removeItem}>remove</button>
                 </li>
                 {mainTasksDisplay}
                 {workHistoryEditSection}

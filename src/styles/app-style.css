@@ -28,7 +28,7 @@ body{
 }
 
 form{
-    width: 720px;
+    width: auto;
 }
 
 .history-container{
@@ -54,29 +54,62 @@ ul{
     padding-left: 12px;
 }
 
-.edit-button{
+.history-button{
     appearance: none;
     border: none;
     outline: none;
     background-color: transparent;
     cursor: pointer;
     font-style: italic;
+    color: grey;
+    font-weight: bold;
+    margin-left: 8px;
+    visibility: hidden;
 }
 
-.work-history-item-container{
+.history-item > li:hover > .history-button,
+.main-tasks-container li:hover > .history-button{
+    visibility: visible;
+}
+
+.history-button.remove-button{
+    margin-left: 0px;
+    font-weight: normal;
+    color: hsl(0deg, 60%, 50%);
+}
+
+.work-history-item{
     margin-bottom: 24px;
 }
 
-.work-history-item-container > li{
+.work-history-item > li{
     margin-bottom: 12px;
 }
 
-.work-history-item-container > .main-tasks-container > ul{
+.work-history-item > .main-tasks-container > ul{
     margin: 0px;
     font-family: 'Montserrat';
     color: hsl(210deg, 12%, 45%);
 
     padding-left: 14px;
     margin-top: 12px;
-    list-style: disc;
+}
+
+.history-item > li, .main-tasks-container li{
+    display: flex;
+    flex-flow: row nowrap;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.history-item > li > .edit-button, .main-tasks-container li > .edit-button{
+    margin-left: auto;
+}
+
+.history-item > li::before,
+.main-tasks-container li::before{
+    content: '⬤';
+    font-size: 6px;
+    margin-right: 6px;
+    padding-top: 5px;
 }

@@ -22,8 +22,8 @@ class MainTaskItem extends React.Component{
 
     render(){
         return (
-            <li>{this.props.mainTask}<button className='edit-button' onClick={this.handleMainTasksEdit}>edit</button>
-            <button className='edit-button remove-button' onClick={this.removeItem}>remove</button></li>
+            <li>{this.props.mainTask}<button className='history-button edit-button' onClick={this.handleMainTasksEdit}>edit</button>
+            <button className='history-button remove-button' onClick={this.removeItem}>remove</button></li>
         )
     }
 }

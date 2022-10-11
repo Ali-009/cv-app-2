@@ -40,10 +40,10 @@ class EduHistoryItem extends React.Component{
         }
 
         return (
-            <div>
+            <div className='history-item edu-history-item'>
                 <li>Studied {studyTitle} in {school} from {formattedStartDate} to {formattedEndDate}
-                <button className='edit-button' onClick={this.displayEduEdit}>edit</button>
-                <button className='edit-button remove-button' onClick={this.removeItem}>remove</button></li>
+                <button className='history-button edit-button' onClick={this.displayEduEdit}>edit</button>
+                <button className='history-button remove-button' onClick={this.removeItem}>remove</button></li>
                 {eduHistoryEditSection}
             </div>
         )
