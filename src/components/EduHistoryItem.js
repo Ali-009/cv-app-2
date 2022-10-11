@@ -6,6 +6,7 @@ class EduHistoryItem extends React.Component{
         super(props)
         this.editEduHistory = this.editEduHistory.bind(this)
         this.displayEduEdit = this.displayEduEdit.bind(this)
+        this.removeItem = this.removeItem.bind(this)
     }
 
     displayEduEdit(event){
@@ -17,6 +18,12 @@ class EduHistoryItem extends React.Component{
     editEduHistory(eduData){
         const {editHistory, eduHistoryIndex} = this.props
         editHistory(eduData, eduHistoryIndex)
+    }
+
+    removeItem(event){
+        event.preventDefault()
+        const {eduHistoryIndex, removeFromHistory} = this.props
+        removeFromHistory(eduHistoryIndex)
     }
 
     render() {
@@ -35,7 +42,8 @@ class EduHistoryItem extends React.Component{
         return (
             <div>
                 <li>Studied {studyTitle} in {school} from {formattedStartDate} to {formattedEndDate}
-                <button className='edit-button' onClick={this.displayEduEdit}>edit</button></li>
+                <button className='edit-button' onClick={this.displayEduEdit}>edit</button>
+                <button className='edit-button remove-button' onClick={this.removeItem}>remove</button></li>
                 {eduHistoryEditSection}
             </div>
         )

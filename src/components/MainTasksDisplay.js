@@ -5,6 +5,7 @@ class MainTaskItem extends React.Component{
     constructor(props){
         super(props)
         this.handleMainTasksEdit = this.handleMainTasksEdit.bind(this)
+        this.removeItem = this.removeItem.bind(this)
     }
 
     handleMainTasksEdit(event){
@@ -13,16 +14,16 @@ class MainTaskItem extends React.Component{
         requestEdit(mainTaskIndex)
     }
 
+    removeItem(event){
+        event.preventDefault()
+        const {mainTaskIndex, removeFromHistory} = this.props
+        removeFromHistory(mainTaskIndex)
+    }
+
     render(){
-        const {mainTask, inWorkExpInput} = this.props
-        let editButton = null
-        if(inWorkExpInput){
-            editButton = <button className='edit-button' onClick={this.handleMainTasksEdit}>edit</button>
-        }
         return (
-            <li>{mainTask}
-                {editButton}
-            </li>
+            <li>{this.props.mainTask}<button className='edit-button' onClick={this.handleMainTasksEdit}>edit</button>
+            <button className='edit-button remove-button' onClick={this.removeItem}>remove</button></li>
         )
     }
 }
@@ -33,12 +34,13 @@ class MainTaskDisplay extends React.Component{
     }
 
     render(){
-        const {mainTasksArray, requestEdit, inWorkExpInput} = this.props
+        const {mainTasksArray, requestEdit, removeFromHistory} = this.props
         let mainTasksList = []
         if(mainTasksArray.length > 0){
             mainTasksList = this.props.mainTasksArray.map((mainTask, index) => {
                 return (
-                    <MainTaskItem key={uniqid()} mainTask={mainTask} mainTaskIndex={index} requestEdit={requestEdit} inWorkExpInput={inWorkExpInput}/>
+                    <MainTaskItem key={uniqid()} mainTask={mainTask} mainTaskIndex={index} requestEdit={requestEdit}
+                    removeFromHistory={removeFromHistory}/>
                 )
             })
         }

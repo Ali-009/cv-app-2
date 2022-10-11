@@ -110,7 +110,20 @@ input[type="date"]{
     font-family: sans-serif
 }
 
-input[type="date"]::placeholder{
-    color: lightgray;
-    font-style: italic;
+.main-tasks-container{
+    margin: 0px;
+    font-family: 'Montserrat';
+    color: hsl(210deg, 12%, 45%);
+}
+
+.main-tasks-container > h4{
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0px;
+}
+
+.main-tasks-container > ul {
+    padding-left: 14px;
+    margin-top: 12px;
+    list-style: disc;
 }

@@ -1,9 +1,7 @@
 import React from 'react'
 import FormControl from './FormControl'
 import InputSection from './InputSection'
-import HistoryContainer from './HistoryContainer'
 import MainTasksDisplay from './MainTasksDisplay'
-import uniqid from 'uniqid'
 
 class WorkExpInput extends React.Component{
     constructor(props){
@@ -18,13 +16,14 @@ class WorkExpInput extends React.Component{
             mainTaskEdit: '',
             mainTaskEditIndex: null,
             mainTasksBeingEdited: false,
-            //a boolean to indicate that an element is within WorkExpInput
-            inWorkExpInput: true,
         }
         this.updateForm = this.updateForm.bind(this)
+        //methods for managing mainTasksArray
         this.addMainTask = this.addMainTask.bind(this)
         this.handleMainTaskEdit = this.handleMainTaskEdit.bind(this)
         this.editMainTask = this.editMainTask.bind(this)
+        this.removeMainTask = this.removeMainTask.bind(this)
+        //updating the overarching form and resetting the input fields afterwards
         this.updateHistory = this.updateHistory.bind(this)
         this.resetInputFields= this.resetInputFields.bind(this)
     }
@@ -48,9 +47,15 @@ class WorkExpInput extends React.Component{
     resetInputFields(historyObj){
         //Reset the fields after the items have been added to history
         for(const historyItem in historyObj){
-            this.setState({
-              [historyItem]: '',
-            })
+            if(Array.isArray(historyObj[historyItem])){
+                this.setState({
+                    [historyItem]: [],
+                })
+            } else {
+                this.setState({
+                    [historyItem]: '',
+                })
+            }
         }
         this.setState({
             mainTasksInput: '',
@@ -92,6 +97,16 @@ class WorkExpInput extends React.Component{
         })
     }
 
+    removeMainTask(targetIndex){
+        this.setState((state) => {
+            return {
+                mainTasksArray: state.mainTasksArray.filter((mainTask, index) => {
+                    return index !== targetIndex
+                })
+            }
+        })
+    }
+
     componentDidMount(){
         const {workData} = this.props
         if(workData){
@@ -111,12 +126,14 @@ class WorkExpInput extends React.Component{
         const {header, buttonPurpose} = this.props
         const {companyName, position, workStart, workEnd} = this.state
 
-        const {mainTasksInput, mainTasksArray, mainTaskEdit, inWorkExpInput, mainTasksBeingEdited} = this.state
+        const {mainTasksInput, mainTasksArray, mainTaskEdit, mainTasksBeingEdited} = this.state
 
         //conditionally render mainTasksEditField
         let mainTasksEditField = null
         if(mainTasksBeingEdited){
-            mainTasksEditField = <FormControl additionalStyling='mainTaskEdit' name='mainTaskEdit' label='' value={mainTaskEdit} updateForm={this.updateForm}>
+            mainTasksEditField 
+            = <FormControl additionalStyling='mainTaskEdit' name='mainTaskEdit' 
+            label='' value={mainTaskEdit} updateForm={this.updateForm}>
                 <button className='input-button' onClick={this.editMainTask}>Edit</button>
             </FormControl>
         }
@@ -124,15 +141,16 @@ class WorkExpInput extends React.Component{
         //conditionally render mainTasksArray
         let mainTasksContainer = null
         if(mainTasksArray.length > 0){
-            mainTasksContainer = <HistoryContainer className='main-tasks-container' title='Main Tasks'>
+            mainTasksContainer = <div className='main-tasks-container'>
+                <h4>Main Tasks</h4>
                 {mainTasksEditField}
                 <ul>
                     <MainTasksDisplay 
                     mainTasksArray={mainTasksArray}
                     requestEdit={this.handleMainTaskEdit}
-                    inWorkExpInput={inWorkExpInput}/>
+                    removeFromHistory={this.removeMainTask}/>
                 </ul>
-            </HistoryContainer>
+            </div>
         }
 
         return (

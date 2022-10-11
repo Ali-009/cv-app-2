@@ -1,13 +1,13 @@
 import React from 'react'
-import MainTasksDisplay from './MainTasksDisplay'
-import HistoryContainer from './HistoryContainer'
 import WorkExpInput from './WorkExpInput'
+import uniqid from 'uniqid'
 
 class WorkHistoryItem extends React.Component{
     constructor(props){
         super(props)
         this.editWorkHistory = this.editWorkHistory.bind(this)
         this.displayWorkEdit = this.displayWorkEdit.bind(this)
+        this.removeItem = this.removeItem.bind(this)
     }
 
     displayWorkEdit(event){
@@ -21,6 +21,12 @@ class WorkHistoryItem extends React.Component{
         editHistory(workData, workHistoryIndex)
     }
 
+    removeItem(event){
+        event.preventDefault()
+        const {workHistoryIndex, removeFromHistory} = this.props
+        removeFromHistory(workHistoryIndex)
+    }
+
     render(){
         const {companyName, position, workStart, workEnd, mainTasksArray} = this.props.workData
         const formattedStartDate = new Date(workStart).toLocaleDateString('en-GB')
@@ -29,8 +35,16 @@ class WorkHistoryItem extends React.Component{
 
         let mainTasksDisplay = null
         if(mainTasksArray.length > 0){
+            const mainTasksList = mainTasksArray.map((mainTask) => {
+                return <li key={uniqid()}>{mainTask}</li>
+            })
             mainTasksDisplay
-            = <MainTasksDisplay mainTasksArray={mainTasksArray}/>
+            = <div className='main-tasks-container'>
+                <h4>Main Tasks</h4>
+                <ul>
+                    {mainTasksList}
+                </ul>
+            </div>
         }
 
         //conditionally rendering the work history edit section
@@ -45,10 +59,9 @@ class WorkHistoryItem extends React.Component{
             <div className="work-history-item-container">
                 <li>Worked in {companyName} as a {position} from {formattedStartDate} to {formattedEndDate}
                 <button className='edit-button' onClick={this.displayWorkEdit}>edit</button>
+                <button className='edit-button remove-button' onClick={this.removeItem}>remove</button>
                 </li>
-                <HistoryContainer title='Main Tasks'>
-                    {mainTasksDisplay}
-                </HistoryContainer>
+                {mainTasksDisplay}
                 {workHistoryEditSection}
             </div>
         )

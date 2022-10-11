@@ -38,8 +38,13 @@ class App extends React.Component{
     this.editEduHistory = this.editEduHistory.bind(this)
     this.editWorkHistory = this.editWorkHistory.bind(this)
 
+    //Used for generating editing sections
     this.handleEduEditRequest = this.handleEduEditRequest.bind(this)
     this.handleWorkEditRequest = this.handleWorkEditRequest.bind(this)
+
+    //Used for removing items from history
+    this.removeEduHistoryItem = this.removeEduHistoryItem.bind(this)
+    this.removeWorkHistoryItem = this.removeWorkHistoryItem.bind(this)
   }
   
   updateForm(name, value){
@@ -138,6 +143,26 @@ class App extends React.Component{
     })
   }
 
+  removeEduHistoryItem(targetIndex){
+    this.setState((state) => {
+      return {
+        eduHistory: state.eduHistory.filter((historyItem, index) => {
+          return index !== targetIndex
+        })
+      }
+    })
+  }
+
+  removeWorkHistoryItem(targetIndex){
+    this.setState((state) => {
+      return {
+        workHistory: state.workHistory.filter((historyItem, index) => {
+          return index !== targetIndex
+        })
+      }
+    })
+  }
+
   render(){
     const {firstName, lastName, email, phoneNumber} = this.state
     const {eduHistory, eduEditIndex} = this.state
@@ -159,7 +184,8 @@ class App extends React.Component{
                 eduHistoryIndex={index}
                 requestEdit={this.handleEduEditRequest}
                 beingEdited={beingEdited}
-                editHistory={this.editEduHistory}/>
+                editHistory={this.editEduHistory}
+                removeFromHistory={this.removeEduHistoryItem}/>
               )
             })}
           </ul>
@@ -182,7 +208,8 @@ class App extends React.Component{
               workHistoryIndex={index}
               requestEdit={this.handleWorkEditRequest}
               beingEdited={beingEdited}
-              editHistory={this.editWorkHistory}/>
+              editHistory={this.editWorkHistory}
+              removeFromHistory={this.removeWorkHistoryItem}/>
             )
           })}
         </ul>

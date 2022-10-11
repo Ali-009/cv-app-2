@@ -48,7 +48,10 @@ ul{
 
 .history-container li{
     font-size: 14px;
-    margin-bottom: 12px;
+}
+
+.history-container > ul {
+    padding-left: 12px;
 }
 
 .edit-button{
@@ -60,6 +63,20 @@ ul{
     font-style: italic;
 }
 
-.work-history-item-container > .history-container{
-    margin: 12px;
+.work-history-item-container{
+    margin-bottom: 24px;
+}
+
+.work-history-item-container > li{
+    margin-bottom: 12px;
+}
+
+.work-history-item-container > .main-tasks-container > ul{
+    margin: 0px;
+    font-family: 'Montserrat';
+    color: hsl(210deg, 12%, 45%);
+
+    padding-left: 14px;
+    margin-top: 12px;
+    list-style: disc;
 }
