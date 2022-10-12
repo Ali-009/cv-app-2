@@ -129,6 +129,7 @@ input[type="date"]{
     margin: 0px;
     font-family: 'Montserrat';
     color: hsl(210deg, 12%, 45%);
+    padding-left: 14px;
 }
 
 .main-tasks-container > h4{

@@ -81,7 +81,7 @@ ul{
 }
 
 .work-history-item{
-    margin-bottom: 24px;
+    margin-bottom: 48px;
 }
 
 .work-history-item > li{
@@ -89,12 +89,11 @@ ul{
 }
 
 .work-history-item > .main-tasks-container > ul{
-    margin: 0px;
     font-family: 'Montserrat';
     color: hsl(210deg, 12%, 45%);
 
-    padding-left: 14px;
-    margin-top: 12px;
+    padding-left: 0px;
+    margin-top: 8px;
 }
 
 .history-item > li, .main-tasks-container li{
@@ -108,9 +107,16 @@ ul{
     margin-left: auto;
 }
 
-.history-item > li::before,
+.history-item > li::before{
+    content: '⬛';
+}
+
 .main-tasks-container li::before{
     content: '⬤';
+}
+
+.history-item > li::before,
+.main-tasks-container li::before{
     font-size: 6px;
     margin-right: 8px;
     padding-top: 5px;
@@ -125,4 +131,12 @@ ul{
     font-size: 16px;
     font-weight: bold;
     background-color: hsl(220deg, 30%, 50%);
+}
+
+.main-tasks-container > h4{
+    margin-top: 24px;
+}
+
+.history-item.edu-history-item{
+    margin-bottom: 24px;
 }
