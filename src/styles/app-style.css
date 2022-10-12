@@ -28,7 +28,7 @@ body{
 }
 
 form{
-    max-width: 720px;
+    width: 720px;
     display: flex;
     flex-flow: column nowrap;
 }

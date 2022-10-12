@@ -61,7 +61,7 @@ class FinalOutput extends React.Component{
                 </div>
                 <div className="cv-main-information">
                     <div className="about-me">
-                        <h2>About Me</h2>
+                        {aboutMe && <h2>About Me</h2>}
                         <p>{aboutMe}</p>
                     </div>
                     {eduHistoyDisplay}
