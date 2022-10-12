@@ -1,7 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap');
+
 .cv{
+    font-family: 'Work Sans';
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 320px 640px;
+    max-width: 960px;
 }
 
+.cv ul{
+    padding-left: 0px;
+    list-style: circle;
+}
 
+.cv ul > li{
+    margin-left: 12px;
+}
 
+.cv-contact-information{
+    background-color: navy;
+    color: white;
+    padding: 24px;
+}
+
+.cv-main-information{
+    padding: 24px;
+}
+
+.about-me, .edu-history-display, .work-history-display{
+    border-bottom: solid thin lightgray;
+}
+
+.work-item{
+    margin-bottom: 32px;
+    list-style: square;
+}
+
+.work-item h3{
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+.back-button{
+    justify-self: end;
+}
+
+.cv p > span{
+    color: lightblue;
+    font-style: italic;
+}
+
+.cv-contact-information-name{
+    font-weight: bold;
+    font-size: 32px;
+}

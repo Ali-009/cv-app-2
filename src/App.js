@@ -271,6 +271,10 @@ class App extends React.Component{
       </HistoryContainer>
     }
 
+    //The 'back' button is passed down to the final output for stylign purposes
+    let backButton = 
+    <button className='input-button back-button' onClick={this.displayForm}>Back</button>
+
     //display input fields or the final submitted form based on user interaction
     let pageDisplay = null
     if(!formSubmitted){
@@ -293,9 +297,8 @@ class App extends React.Component{
     } else {
       pageDisplay
       = <div className="app-container">
-        <button className='input-button back-button' onClick={this.displayForm}>Back</button>
         <FinalOutput firstName={firstName} lastName={lastName} email={email} phoneNumber={phoneNumber} aboutMe={aboutMe}
-        eduHistoryContainer={eduHistoryContainer} workHistoryContainer={workHistoryContainer}/>
+        eduHistory={eduHistory} workHistory={workHistory} backButton={backButton}/>
       </div>
     }
 

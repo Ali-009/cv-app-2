@@ -28,13 +28,13 @@ body{
 }
 
 form{
-    min-width: 720px;
+    max-width: 720px;
     display: flex;
     flex-flow: column nowrap;
 }
 
 .history-container{
-    margin: 48px;
+    margin: 24px 48px 24px 48px;
     font-family: 'Montserrat';
     color: hsl(210deg, 12%, 45%);
 }
