@@ -13,9 +13,7 @@ class FormControl extends React.Component{
 
     render(){
         const {name, label, type, value, children, additionalStyling} = this.props
-        if(type === null){
-            type = 'text'
-        }
+        
         let additionalClasses = ''
         if(additionalStyling){
             additionalClasses = additionalStyling

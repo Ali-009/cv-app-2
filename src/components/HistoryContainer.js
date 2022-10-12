@@ -1,10 +1,6 @@
 import React from 'react'
 
 class HistoryContainer extends React.Component{
-    constructor(props){
-        super(props)
-    }
-
     render(){
         const {title, children} = this.props
         return (

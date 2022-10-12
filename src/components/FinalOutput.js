@@ -3,9 +3,6 @@ import '../styles/final-output.css'
 import uniqid from 'uniqid'
 
 class FinalOutput extends React.Component{
-    constructor(props){
-        super(props)
-    }
 
     render(){
         const {firstName, lastName, email, phoneNumber, aboutMe} = this.props

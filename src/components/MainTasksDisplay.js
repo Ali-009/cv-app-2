@@ -29,10 +29,6 @@ class MainTaskItem extends React.Component{
 }
 
 class MainTaskDisplay extends React.Component{
-    constructor(props){
-        super(props)
-    }
-
     render(){
         const {mainTasksArray, requestEdit, removeFromHistory} = this.props
         let mainTasksList = []
